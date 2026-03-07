@@ -1,0 +1,35 @@
+# Dépendances
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Fichiers de cache
+rpm-cache/
+rpms-cache/
+.cache/
+*.log
+npm-debug.log*
+
+# Fichiers temporaires
+backend/0
+backend/1
+backend/2
+*~
+*.tmp
+*.swp
+
+# Environnement
+.env
+.env.local
+backend/.env
+frontend/.env
+
+# Build
+dist/
+build/
+backend/dist/
+frontend/dist/
+
+# Système
+.DS_Store
+Thumbs.db

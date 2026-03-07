@@ -1,0 +1,44 @@
+.table-fixed {
+  table-layout: fixed;
+  width: 100%;
+  word-wrap: break-word;
+}
+
+/* Empêche les sauts de ligne désordonnés */
+.truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* ✅ Conteneur stable pour les boutons */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px; /* espace régulier entre les boutons */
+  min-height: 38px; /* hauteur fixe pour stabiliser toutes les lignes */
+  flex-wrap: nowrap;
+}
+
+/* Les boutons gardent une largeur fixe pour rester bien alignés */
+.action-buttons button {
+  min-width: 85px;
+  text-align: center;
+}
+.table td,
+.table th {
+  vertical-align: middle !important;
+  text-align: center;
+  white-space: nowrap; /* empêche le retour à la ligne */
+  overflow: hidden;
+  text-overflow: ellipsis; /* ajoute "..." si le texte est trop long */
+}
+
+.btn-group {
+  display: flex;
+  justify-content: center;
+  gap: 5px; /* espace entre les boutons */
+  flex-wrap: nowrap;
+}

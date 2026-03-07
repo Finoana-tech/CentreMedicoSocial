@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centre Médico-Social - Gestion</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #1cc88a;
+            --light-bg: #f8f9fc;
+        }
+        body {
+            background-color: var(--light-bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+        }
+        .header {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        .dashboard-card {
+            transition: transform 0.3s;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .patient-card {
+            transition: transform 0.3s;
+            border-left: 4px solid var(--primary-color);
+            border-radius: 8px;
+        }
+        .patient-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .female-patient {
+            border-left: 4px solid #e83e8c;
+        }
+        .male-patient {
+            border-left: 4px solid var(--primary-color);
+        }
+        .stats-icon {
+            font-size: 2rem;
+            opacity: 0.3;
+        }
+        .badge-bg-pink {
+            background-color: #e83e8c;
+            color: white;
+        }
+        .consultation-table {
+            font-size: 0.9rem;
+        }
+        .consultation-table th {
+            background-color: #f8f9fa;
+        }
+        .nav-tabs .nav-link.active {
+            font-weight: bold;
+            border-bottom: 3px solid var(--primary-color);
+        }
+        .api-status {
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h1 class="h3 mb-0"><i class="fas fa-hospital-alt me-2"></i>Centre Médico-Social</h1>
+                    <small class="text-muted">Gestion des patients et consultations</small>
+                </div>
+                <div class="col-auto">
+                    <span id="apiStatus" class="api-status badge bg-danger">Backend déconnecté</span>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPatientModal">
+                        <i class="fas fa-plus me-1"></i> Nouveau Patient
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" data-bs-target="#dashboard" type="button" role="tab">Tableau de bord</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="patients-tab" data-bs-toggle="tab" data-bs-target="#patients" type="button" role="tab">Patients</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="consultations-tab" data-bs-toggle="tab" data-bs-target="#consultations" type="button" role="tab">Consultations</button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="myTabContent">
+            <!-- Dashboard Tab -->
+            <div class="tab-pane fade show active" id="dashboard" role="tabpanel">
+                <!-- Statistics -->
+                <div class="row">
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card dashboard-card border-0 shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                            Patients</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="stats-patients">3</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-user-injured stats-icon text-primary"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card dashboard-card border-0 shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                            Familles</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="stats-families">2</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-users stats-icon text-success"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card dashboard-card border-0 shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                            Consultations</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="stats-consultations">2</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-stethoscope stats-icon text-info"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card dashboard-card border-0 shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                            Rendez-vous</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="stats-appointments">2</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-calendar-check stats-icon text-warning"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Patients -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                                <h6 class="m-0 font-weight-bold text-primary">Patients Récents</h6>
+                                <a href="#" onclick="switchTab('patients-tab')" class="btn btn-sm btn-outline-primary">Voir tous</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="row" id="recent-patients-container">
+                                    <!-- Recent patients will be dynamically inserted here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patients Tab -->
+            <div class="tab-pane fade" id="patients" role="tabpanel">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                                <h6 class="m-0 font-weight-bold text-primary">Liste des Patients</h6>
+                                <div>
+                                    <div class="dropdown d-inline-block me-2">
+                                        <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-filter me-1"></i>Filtrer
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <li><a class="dropdown-item" href="#" onclick="filterPatients('all')">Tous</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="filterPatients('F')">Filles</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="filterPatients('M')">Garçons</a></li>
+                                        </ul>
+                                    </div>
+                                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addPatientModal">
+                                        <i class="fas fa-plus me-1"></i> Nouveau
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row" id="patients-container">
+                                    <!-- Patients will be dynamically inserted here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Consultations Tab -->
+            <div class="tab-pane fade" id="consultations" role="tabpanel">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card shadow">
+                            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                                <h6 class="m-0 font-weight-bold text-primary">Consultations</h6>
+                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addConsultationModal">
+                                    <i class="fas fa-plus me-1"></i> Nouvelle
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered consultation-table" id="consultationsTable" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>Patient</th>
+                                                <th>Date</th>
+                                                <th>Motif</th>
+                                                <th>Diagnostic</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="consultations-body">
+                                            <!-- Consultations will be dynamically inserted here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Patient Modal -->
+    <div class="modal fade" id="addPatientModal" tabindex="-1" aria-labelledby="addPatientModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addPatientModalLabel">Ajouter un Nouveau Patient</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="patientForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="prenom" class="form-label">Prénom *</label>
+                                    <input type="text" class="form-control" id="prenom" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="nom" class="form-label">Nom *</label>
+                                    <input type="text" class="form-control" id="nom" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="date_naissance" class="form-label">Date de Naissance *</label>
+                                    <input type="date" class="form-control" id="date_naissance" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="sexe" class="form-label">Sexe *</label>
+                                    <select class="form-select" id="sexe" required>
+                                        <option value="">Sélectionner...</option>
+                                        <option value="M">Masculin</option>
+                                        <option value="F">Féminin</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="famille" class="form-label">Famille</label>
+                            <select class="form-select" id="famille">
+                                <option value="">Sélectionner une famille...</option>
+                                <option value="1">Famille Dupont</option>
+                                <option value="2">Famille Martin</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="telephone" class="form-label">Téléphone</label>
+                                    <input type="tel" class="form-control" id="telephone">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="adresse" class="form-label">Adresse</label>
+                                    <input type="text" class="form-control" id="adresse">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary" onclick="addPatient()">Enregistrer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Consultation Modal -->
+    <div class="modal fade" id="addConsultationModal" tabindex="-1" aria-labelledby="addConsultationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addConsultationModalLabel">Nouvelle Consultation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="consultationForm">
+                        <div class="mb-3">
+                            <label for="consultationPatient" class="form-label">Patient *</label>
+                            <select class="form-select" id="consultationPatient" required>
+                                <option value="">Sélectionner un patient...</option>
+                                <option value="1">Marie Dupont</option>
+                                <option value="2">Luc Dupont</option>
+                                <option value="3">Jeanne Martin</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="consultationDate" class="form-label">Date *</label>
+                                    <input type="date" class="form-control" id="consultationDate" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="consultationTime" class="form-label">Heure *</label>
+                                    <input type="time" class="form-control" id="consultationTime" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="consultationMotif" class="form-label">Motif *</label>
+                            <textarea class="form-control" id="consultationMotif" rows="2" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="consultationDiagnostic" class="form-label">Diagnostic</label>
+                            <textarea class="form-control" id="consultationDiagnostic" rows="2"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="consultationTraitement" class="form-label">Traitement</label>
+                            <textarea class="form-control" id="consultationTraitement" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary" onclick="addConsultation()">Enregistrer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Configuration
+        const API_BASE_URL = 'http://localhost:5000/api';
+        
+        // Sample data for patients (will be replaced with API data)
+        let patients = [
+            {
+                id_patient: 1,
+                nom: "Dupont",
+                prenom: "Marie",
+                date_naissance: "2015-03-11T21:00:00.000Z",
+                sexe: "F",
+                adresse: null,
+                telephone: null,
+                id_famille: 1,
+                nom_famille: "famille_dupont"
+            },
+            {
+                id_patient: 2,
+                nom: "Dupont",
+                prenom: "Luc",
+                date_naissance: "2018-07-23T21:00:00.000Z",
+                sexe: "M",
+                adresse: null,
+                telephone: null,
+                id_famille: 1,
+                nom_famille: "famille_dupont"
+            },
+            {
+                id_patient: 3,
+                nom: "Martin",
+                prenom: "Jeanne",
+                date_naissance: "2016-11-04T21:00:00.000Z",
+                sexe: "F",
+                adresse: null,
+                telephone: null,
+                id_famille: 2,
+                nom_famille: "famille_martin"
+            }
+        ];
+
+        // Sample data for consultations
+        let consultations = [
+            {
+                id_consultation: 1,
+                date_consultation: "2023-05-15T10:30:00.000Z",
+                motif: "Fièvre et toux",
+                diagnostic: "Angine bactérienne",
+                traitement: "Antibiotiques pendant 5 jours",
+                id_patient: 1,
+                patient_nom: "Marie Dupont"
+            },
+            {
+                id_consultation: 2,
+                date_consultation: "2023-05-13T14:15:00.000Z",
+                motif: "Bilan de santé annuel",
+                diagnostic: "En bonne santé",
+                traitement: null,
+                id_patient: 3,
+                patient_nom: "Jeanne Martin"
+            }
+        ];
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            checkBackendStatus();
+            displayPatients();
+            displayRecentPatients();
+            displayConsultations();
+        });
+
+        // Check if backend is available
+        async function checkBackendStatus() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/patients`);
+                if (response.ok) {
+                    document.getElementById('apiStatus').className = 'api-status badge bg-success';
+                    document.getElementById('apiStatus').textContent = 'Backend connecté';
+                    // Load real data from API
+                    loadDataFromAPI();
+                } else {
+                    document.getElementById('apiStatus').className = 'api-status badge bg-warning';
+                    document.getElementById('apiStatus').textContent = 'Backend erreur';
+                }
+            } catch (error) {
+                console.log('Utilisation des données de démonstration');
+                // Continue with demo data
+            }
+        }
+
+        // Load data from API
+        async function loadDataFromAPI() {
+            try {
+                const patientsResponse = await fetch(`${API_BASE_URL}/patients`);
+                if (patientsResponse.ok) {
+                    patients = await patientsResponse.json();
+                    displayPatients();
+                    displayRecentPatients();
+                    document.getElementById('stats-patients').textContent = patients.length;
+                }
+
+                const consultationsResponse = await fetch(`${API_BASE_URL}/consultations`);
+                if (consultationsResponse.ok) {
+                    consultations = await consultationsResponse.json();
+                    displayConsultations();
+                    document.getElementById('stats-consultations').textContent = consultations.length;
+                }
+            } catch (error) {
+                console.error('Erreur de chargement des données:', error);
+            }
+        }
+
+        // Function to display patients
+        function displayPatients(patientsToShow = patients) {
+            const container = document.getElementById('patients-container');
+            container.innerHTML = '';
+
+            patientsToShow.forEach(patient => {
+                const birthDate = new Date(patient.date_naissance);
+                const age = calculateAge(birthDate);
+                const genderClass = patient.sexe === 'F' ? 'female-patient' : 'male-patient';
+                const genderIcon = patient.sexe === 'F' ? 'fa-female' : 'fa-male';
+                const genderText = patient.sexe === 'F' ? 'Fille' : 'Garçon';
+
+                const patientCard = `
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card patient-card ${genderClass}">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title">${patient.prenom} ${patient.nom}</h5>
+                                    <span class="badge ${patient.sexe === 'F' ? 'badge-bg-pink' : 'bg-primary'}">
+                                        <i class="fas ${genderIcon}"></i> ${genderText}
+                                    </span>
+                                </div>
+                                <h6 class="card-subtitle mb-2 text-muted">${patient.nom_famille || 'Aucune famille'}</h6>
+                                <div class="row mt-3">
+                                    <div class="col-6">
+                                        <p class="card-text"><i class="fas fa-birthday-cake me-2"></i> ${age} ans</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="card-text"><i class="fas fa-calendar me-2"></i> ${formatDate(birthDate)}</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end mt-3">
+                                    <button class="btn btn-sm btn-outline-primary me-2" onclick="viewPatient(${patient.id_patient})">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-success me-2" onclick="editPatient(${patient.id_patient})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deletePatient(${patient.id_patient})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                container.innerHTML += patientCard;
+            });
+        }
+
+        // Display recent patients (for dashboard)
+        function displayRecentPatients() {
+            const container = document.getElementById('recent-patients-container');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            const recentPatients = patients.slice(0, 3); // Get first 3 patients
+
+            recentPatients.forEach(patient => {
+                const birthDate = new Date(patient.date_naissance);
+                const age = calculateAge(birthDate);
+                const genderIcon = patient.sexe === 'F' ? 'fa-female' : 'fa-male';
+
+                const patientCard = `
+                    <div class="col-md-4 mb-3">
+                        <div class="card patient-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="card-title">${patient.prenom} ${patient.nom}</h6>
+                                    <span class="badge ${patient.sexe === 'F' ? 'badge-bg-pink' : 'bg-primary'}">
+                                        <i class="fas ${genderIcon}"></i>
+                                    </span>
+                                </div>
+                                <p class="card-text mb-1">${patient.nom_famille || 'Aucune famille'}</p>
+                                <p class="card-text"><small class="text-muted">${age} ans • ${formatDate(birthDate)}</small></p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                container.innerHTML += patientCard;
+            });
+        }
+
+        // Display consultations
+        function displayConsultations() {
+            const container = document.getElementById('consultations-body');
+            if (!container) return;
+            
+            container.innerHTML = '';
+
+            consultations.forEach(consultation => {
+                const consultationDate = new Date(consultation.date_consultation);
+                
+                const consultationRow = `
+                    <tr>
+                        <td>${consultation.patient_nom || 'Patient inconnu'}</td>
+                        <td>${formatDateTime(consultationDate)}</td>
+                        <td>${consultation.motif}</td>
+                        <td>${consultation.diagnostic || 'Non spécifié'}</td>
+                        <td>
+                            <button class="btn btn-sm btn-info">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+
+                container.innerHTML += consultationRow;
+            });
+        }
+
+        // Filter patients by gender
+        function filterPatients(gender) {
+            if (gender === 'all') {
+                displayPatients();
+            } else {
+                const filteredPatients = patients.filter(patient => patient.sexe === gender);
+                displayPatients(filteredPatients);
+            }
+        }
+
+        // Switch tabs programmatically
+        function switchTab(tabId) {
+            const tabElement = document.getElementById(tabId);
+            if (tabElement) {
+                const tab = new bootstrap.Tab(tabElement);
+                tab.show();
+            }
+        }
+
+        // Calculate age from birth date
+        function calculateAge(birthDate) {
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            return age;
+        }
+
+        // Format date to DD/MM/YYYY
+        function formatDate(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            
+            return `${day}/${month}/${year}`;
+        }
+
+        // Format date and time
+        function formatDateTime(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            
+            return `${day}/${month}/${year} ${hours}:${minutes}`;
+        }
+
+        // Add a new patient
+        async function addPatient() {
+            const prenom = document.getElementById('prenom').value;
+            const nom = document.getElementById('nom').value;
+            const date_naissance = document.getElementById('date_naissance').value;
+            const sexe = document.getElementById('sexe').value;
+            const famille = document.getElementById('famille').value;
+            const telephone = document.getElementById('telephone').value;
+            const adresse = document.getElementById('adresse').value;
+            
+            if (!prenom || !nom || !date_naissance || !sexe) {
+                alert('Veuillez remplir tous les champs obligatoires');
+                return;
+            }
+            
+            // Create new patient object
+            const newPatient = {
+                nom: nom,
+                prenom: prenom,
+                date_naissance: new Date(date_naissance).toISOString(),
+                sexe: sexe,
+                adresse: adresse || null,
+                telephone: telephone || null,
+                id_famille: famille ? parseInt(famille) : null
+            };
+            
+            try {
+                // Try to save to API
+                const response = await fetch(`${API_BASE_URL}/patients`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newPatient)
+                });
+                
+                if (response.ok) {
+                    const savedPatient = await response.json();
+                    patients.push(savedPatient);
+                    displayPatients();
+                    displayRecentPatients();
+                    
+                    // Close modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('addPatientModal'));
+                    modal.hide();
+                    
+                    // Reset form
+                    document.getElementById('patientForm').reset();
+                    
+                    alert('Patient ajouté avec succès!');
+                } else {
+                    throw new Error('Erreur API');
+                }
+            } catch (error) {
+                // Fallback to local data if API is not available
+                newPatient.id_patient = patients.length + 1;
+                newPatient.nom_famille = document.getElementById('famille').options[document.getElementById('famille').selectedIndex].text;
+                if (newPatient.nom_famille === "Sélectionner une famille...") {
+                    newPatient.nom_famille = null;
+                }
+                
+                patients.push(newPatient);
+                displayPatients();
+                displayRecentPatients();
+                
+                // Close modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('addPatientModal'));
+                modal.hide();
+                
+                // Reset form
+                document.getElementById('patientForm').reset();
+                
+                alert('Patient ajouté avec succès (mode démo)!');
+            }
+        }
+
+        // Add a new consultation
+        function addConsultation() {
+            const patientId = document.getElementById('consultationPatient').value;
+            const date = document.getElementById('consultationDate').value;
+            const time = document.getElementById('consultationTime').value;
+            const motif = document.getElementById('consultationMotif').value;
+            const diagnostic = document.getElementById('consultationDiagnostic').value;
+            const traitement = document.getElementById('consultationTraitement').value;
+            
+            if (!patientId || !date || !time || !motif) {
+                alert('Veuillez remplir tous les champs obligatoires');
+                return;
+            }
+            
+            // Find patient name
+            const patientSelect = document.getElementById('consultationPatient');
+            const patientName = patientSelect.options[patientSelect.selectedIndex].text;
+            
+            // Create new consultation object
+            const newConsultation = {
+                date_consultation: new Date(`${date}T${time}`).toISOString(),
+                motif: motif,
+                diagnostic: diagnostic || null,
+                traitement: traitement || null,
+                id_patient: parseInt(patientId),
+                patient_nom: patientName
+            };
+            
+            newConsultation.id_consultation = consultations.length + 1;
+            consultations.push(newConsultation);
+            displayConsultations();
+            
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('addConsultationModal'));
+            modal.hide();
+            
+            // Reset form
+            document.getElementById('consultationForm').reset();
+            
+            alert('Consultation ajoutée avec succès!');
+        }
+
+        // View patient details
+        function viewPatient(id) {
+            alert(`Voir les détails du patient #${id}`);
+            // Implement view functionality
+        }
+
+        // Edit patient
+        function editPatient(id) {
+            alert(`Modifier le patient #${id}`);
+            // Implement edit functionality
+        }
+
+        // Delete patient
+        function deletePatient(id) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce patient ?')) {
+                patients = patients.filter(patient => patient.id_patient !== id);
+                displayPatients();
+                displayRecentPatients();
+                alert('Patient supprimé avec succès!');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+/* src/components/common/Navbar.css */
+
+.navbar-custom {
+  height: 60px;
+  background-color: #3360a4;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+}
+
+.navbar-left h4 {
+  margin: 0;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.user-name {
+  font-weight: 500;
+}

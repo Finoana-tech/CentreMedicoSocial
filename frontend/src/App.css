@@ -1,0 +1,199 @@
+/* Styles globaux pour l'application médicale */
+.medical-app {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Sidebar personnalisée */
+.sidebar-medical {
+  background: linear-gradient(180deg, #2c3e50 0%, #3498db 100%);
+  min-height: 100vh;
+}
+
+.sidebar-medical .nav-link {
+  color: #ecf0f1;
+  padding: 12px 20px;
+  margin: 4px 0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.sidebar-medical .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  transform: translateX(5px);
+}
+
+.sidebar-medical .nav-link.active {
+  background-color: #e74c3c;
+  color: white;
+  font-weight: 600;
+}
+
+/* Navbar personnalisée */
+.navbar-medical {
+  background: linear-gradient(90deg, #3498db 0%, #2c3e50 100%);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Cartes de dashboard */
+.dashboard-card {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.dashboard-card .card-body {
+  padding: 1.5rem;
+}
+
+/* Badges personnalisés */
+.badge-medical {
+  font-size: 0.75em;
+  padding: 0.4em 0.8em;
+  border-radius: 20px;
+}
+
+/* Tableaux médicaux */
+.medical-table {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+}
+
+.medical-table thead th {
+  background: linear-gradient(90deg, #3498db 0%, #2980b9 100%);
+  color: white;
+  border: none;
+  padding: 15px 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85em;
+  letter-spacing: 0.5px;
+}
+
+.medical-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.medical-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Boutons médicaux */
+.btn-medical {
+  border-radius: 8px;
+  padding: 8px 20px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.btn-medical-primary {
+  background: linear-gradient(45deg, #3498db, #2980b9);
+  color: white;
+}
+
+.btn-medical-primary:hover {
+  background: linear-gradient(45deg, #2980b9, #3498db);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.btn-medical-success {
+  background: linear-gradient(45deg, #27ae60, #229954);
+  color: white;
+}
+
+.btn-medical-danger {
+  background: linear-gradient(45deg, #e74c3c, #c0392b);
+  color: white;
+}
+
+/* Modales personnalisées */
+.medical-modal .modal-header {
+  background: linear-gradient(90deg, #3498db 0%, #2c3e50 100%);
+  color: white;
+  border-bottom: none;
+}
+
+.medical-modal .modal-title {
+  font-weight: 600;
+}
+
+/* Statistiques et graphiques */
+.stats-container {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar-medical {
+    min-height: auto;
+  }
+  
+  .dashboard-card {
+    margin-bottom: 1rem;
+  }
+  
+  .medical-table {
+    font-size: 0.9em;
+  }
+}
+
+/* Animation de chargement */
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.loading-pulse {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* États des rendez-vous */
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-planifie {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status-termine {
+  background-color: #d1edff;
+  color: #0c5460;
+}
+
+.status-annule {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Quick Actions */
+.quick-action-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.quick-action-card:hover {
+  border-color: #3498db;
+  transform: scale(1.05);
+}

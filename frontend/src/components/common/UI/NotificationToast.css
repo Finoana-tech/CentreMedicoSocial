@@ -1,0 +1,16 @@
+/* NotificationToast.css */
+.toast-modal .modal-content {
+  transform: scale(0.5);
+  opacity: 0;
+  transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+}
+
+.toast-modal.show .modal-content {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.toast-content {
+  min-width: 300px;
+  max-width: 400px;
+}
