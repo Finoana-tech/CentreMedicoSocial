@@ -192,7 +192,7 @@ const UtilisateurController = {
     }
   },
 
-  // 🆕 Mot de passe oublié (frontend page email)
+  //  Mot de passe oublié (frontend page email)
   async forgotPassword(req, res) {
     try {
       const { email } = req.body;
@@ -206,10 +206,10 @@ const UtilisateurController = {
       // Génération d’un token temporaire pour la réinitialisation (1h)
       const resetToken = jwt.sign({ email: result.email }, SECRET, { expiresIn: "1h" });
 
-      // ⚡ Pas d'envoi email, juste renvoyer le token au frontend
+      //  Pas d'envoi email, juste renvoyer le token au frontend
       res.json({
         success: true,
-        message: "✅ Email vérifié, vous pouvez réinitialiser le mot de passe",
+        message: "Email vérifié, vous pouvez réinitialiser le mot de passe",
         token: resetToken,
         email: result.email
       });
@@ -220,7 +220,7 @@ const UtilisateurController = {
     }
   },
 
-  // 🆕 Réinitialisation du mot de passe
+  //  Réinitialisation du mot de passe
   async resetPassword(req, res) {
     try {
       const { token, nouveau_mot_de_passe } = req.body;

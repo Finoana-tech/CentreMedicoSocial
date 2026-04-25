@@ -19,9 +19,8 @@ const app = express();
 const port = process.env.PORT || 5000;
 const host = process.env.HOST || 'localhost';
 
-// =============================================
+
 //  MIDDLEWARES DE SECURITE - CORS MANUEL
-// =============================================
 
 // CONFIGURATION CORS MANUELLE - CORRIGÉE
 app.use((req, res, next) => {

@@ -22,7 +22,7 @@ pool.getConnection()
     connection.release();
   })
   .catch(err => {
-    console.error('❌ Erreur de création du pool MySQL:', err.message);
+    console.error(' Erreur de création du pool MySQL:', err.message);
   });
 
 module.exports = pool;

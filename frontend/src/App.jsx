@@ -18,11 +18,11 @@ import './App.css';
 import RendezVousForm from './components/rendez_vous/RendezVousForm';
 import RendezVousStats from './components/rendez_vous/RendezVousStats';
 
-// ✅ Nouvelles pages pour mot de passe oublié et reset
+//  Nouvelles pages pour mot de passe oublié et reset
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 
-// ✅ Nouvelle page utilisateurs
+//  Nouvelle page utilisateurs
 import Utilisateurs from './pages/Utilisateurs';
 
 function App() {

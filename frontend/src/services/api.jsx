@@ -9,7 +9,7 @@ class ApiService {
   }
 
   setToken(token) {
-   // console.log('🔑 Définition du token dans apiService');
+   // console.log(' Définition du token dans apiService');
     this.token = token;
     if (token) {
       localStorage.setItem('authToken', token);
@@ -119,7 +119,7 @@ class ApiService {
 
   // Méthodes spécifiques pour la compatibilité
   async login(email, password) {
-    //console.log('🔐 Tentative de login via apiService');
+    //console.log(' Tentative de login via apiService');
     const data = await this.post('/api/utilisateurs/login', { 
       email, 
       mot_de_passe: password 
@@ -127,7 +127,7 @@ class ApiService {
     
     if (data.token) {
       this.setToken(data.token);
-      //console.log('✅ Token défini après login');
+      //console.log(' Token défini après login');
     }
     
     return data;
@@ -135,7 +135,7 @@ class ApiService {
 
   isAuthenticated() {
     const isAuth = !!this.token;
-    //console.log('🔍 Vérification auth:', isAuth);
+    //console.log('Vérification auth:', isAuth);
     return isAuth;
   }
 
