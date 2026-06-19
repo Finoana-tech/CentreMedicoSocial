@@ -90,7 +90,6 @@ const PatientDetails = ({ show, onHide, patient }) => {
               {/* Colonne Informations Personnelles */}
               <Col md={6}>
                 <h6 className="text-primary mb-3">
-                  {/* Colonne Informations Personnelles<BsPerson className="me-2" /> */}
                   Informations Personnelles
                 </h6>
                 
@@ -142,7 +141,6 @@ const PatientDetails = ({ show, onHide, patient }) => {
               {/* Colonne Coordonnées */}
               <Col md={6}>
                 <h6 className="text-primary mb-3">
-                  {/* Colonne Coordonnées<BsTelephone className="me-2" /> */}
                   Coordonnées
                 </h6>
                 
@@ -227,7 +225,6 @@ const PatientDetails = ({ show, onHide, patient }) => {
                       </Col>
                     </Row>
                     <div className="text-muted small mt-2">
-                      {/* Ligne séparatrice <BsPeople className="me-1" />*/}
                       Ce patient est un membre de famille lié à un employé JIRAMA
                     </div>
                   </>

@@ -1,122 +1,101 @@
-// src/services/ordonnanceService.js
 import { apiService } from './api';
 
 class OrdonnanceService {
   async getAll() {
-    const res = await apiService.get('/api/ordonnance'); // CORRIGÉ : /api/ordonnance
+    const res = await apiService.get('/api/ordonnance'); 
     return res.data || res;
   }
 
   async getById(id) {
-    const res = await apiService.get(`/api/ordonnance/${id}`); // CORRIGÉ : /api/ordonnance
+    const res = await apiService.get(`/api/ordonnance/${id}`); 
     return res.data || res;
   }
 
-  // 🆕 NOUVELLE MÉTHODE : Récupérer les détails complets pour l'affichage
   async getDetailsById(id) {
-    const res = await apiService.get(`/api/ordonnance/${id}/details`); // CORRIGÉ : /api/ordonnance
+    const res = await apiService.get(`/api/ordonnance/${id}/details`);
     return res.data || res;
   }
 
   async create(data) {
-    const res = await apiService.post('/api/ordonnance', data); // CORRIGÉ : /api/ordonnance
+    const res = await apiService.post('/api/ordonnance', data); 
     return res.data || res;
   }
 
   async update(id, data) {
-    const res = await apiService.put(`/api/ordonnance/${id}`, data); // CORRIGÉ : /api/ordonnance
+    const res = await apiService.put(`/api/ordonnance/${id}`, data); 
     return res.data || res;
   }
 
   async delete(id) {
-    const res = await apiService.delete(`/api/ordonnance/${id}`); // CORRIGÉ : /api/ordonnance
+    const res = await apiService.delete(`/api/ordonnance/${id}`); 
     return res.data || res;
   }
 
   async search(query) {
-    const res = await apiService.get(`/api/ordonnance/search?q=${encodeURIComponent(query)}`); // CORRIGÉ : /api/ordonnance
+    const res = await apiService.get(`/api/ordonnance/search?q=${encodeURIComponent(query)}`); 
     return res.data || res;
   }
 
-  // === NOUVELLES MÉTHODES WORKFLOW ===
-
-  // Valider une ordonnance
   async valider(id, validated_by) {
-    const res = await apiService.patch(`/api/ordonnance/${id}/valider`, { validated_by }); // CORRIGÉ : /api/ordonnance
+    const res = await apiService.patch(`/api/ordonnance/${id}/valider`, { validated_by }); 
     return res.data || res;
   }
 
-  // Marquer comme en préparation
   async marquerEnPreparation(id) {
-    const res = await apiService.patch(`/api/ordonnance/${id}/preparation`); // CORRIGÉ : /api/ordonnance
+    const res = await apiService.patch(`/api/ordonnance/${id}/preparation`);
     return res.data || res;
   }
 
-  // Délivrer une ordonnance
   async delivrer(id) {
-    const res = await apiService.patch(`/api/ordonnance/${id}/delivrer`); // CORRIGÉ : /api/ordonnance
+    const res = await apiService.patch(`/api/ordonnance/${id}/delivrer`);
     return res.data || res;
   }
 
-  // Annuler une ordonnance
   async annuler(id) {
-    const res = await apiService.patch(`/api/ordonnance/${id}/annuler`); // CORRIGÉ : /api/ordonnance
+    const res = await apiService.patch(`/api/ordonnance/${id}/annuler`);
     return res.data || res;
   }
 
-  // Utiliser un renouvellement
   async utiliserRenouvellement(id) {
-    const res = await apiService.patch(`/api/ordonnance/${id}/renouveler`); // CORRIGÉ : /api/ordonnance
+    const res = await apiService.patch(`/api/ordonnance/${id}/renouveler`); 
     return res.data || res;
   }
 
-  // Vérifier la validité d'une ordonnance
   async estValide(id) {
-    const res = await apiService.get(`/api/ordonnance/${id}/validite`); // CORRIGÉ : /api/ordonnance
+    const res = await apiService.get(`/api/ordonnance/${id}/validite`); 
     return res.data || res;
   }
 
-  // === NOUVELLES MÉTHODES STATISTIQUES ===
-
-  // Obtenir les statistiques par statut
   async getStatsByStatut() {
-    const res = await apiService.get('/api/ordonnance/stats/statut'); // CORRIGÉ : /api/ordonnance
+    const res = await apiService.get('/api/ordonnance/stats/statut'); 
     return res.data || res;
   }
 
-  // Obtenir les ordonnances urgentes
   async getOrdonnancesUrgentes() {
-    const res = await apiService.get('/api/ordonnance/urgentes'); // CORRIGÉ : /api/ordonnance
+    const res = await apiService.get('/api/ordonnance/urgentes'); 
     return res.data || res;
   }
 
-  // Obtenir les ordonnances récentes
   async getRecentPrescriptions() {
-    const res = await apiService.get('/api/ordonnance/recentes'); // CORRIGÉ : /api/ordonnance
+    const res = await apiService.get('/api/ordonnance/recentes'); 
     return res.data || res;
   }
 
-  // Compter les ordonnances du mois
   async countOrdonnancesThisMonth() {
-    const res = await apiService.get('/api/ordonnance/stats/mois'); // CORRIGÉ : /api/ordonnance
+    const res = await apiService.get('/api/ordonnance/stats/mois'); 
     return res.data || res;
   }
 
-  // === 🆕 NOUVELLES MÉTHODES RENOUVELLEMENT ===
-
-  // Obtenir le nombre de renouvellements restants
   async getRenouvellementsRestants(id) {
-    const res = await apiService.get(`/api/ordonnance/${id}/renouvellements-restants`); // CORRIGÉ : /api/ordonnance
+    const res = await apiService.get(`/api/ordonnance/${id}/renouvellements-restants`); 
     return res.data || res;
   }
 
-  // Créer une copie renouvelée de l'ordonnance
   async renouvelerOrdonnance(id) {
-    const res = await apiService.post(`/api/ordonnance/${id}/renouveler-copie`); // CORRIGÉ : /api/ordonnance
+    const res = await apiService.post(`/api/ordonnance/${id}/renouveler-copie`); 
     return res.data || res;
   }
 
-  // === 🆕 MÉTHODE EXPORT PDF ===
 
   // Exporter une ordonnance en PDF
   async exportToPDF(id) {
@@ -149,9 +128,7 @@ class OrdonnanceService {
     }
   }
 
-  // === 🆕 MÉTHODE UTILITAIRE POUR LE FORMULAIRE ===
 
-  // Formater les données pour la création/mise à jour
   formatOrdonnanceData(formData) {
     return {
       id_patient: formData.id_patient,
@@ -169,13 +146,12 @@ class OrdonnanceService {
     };
   }
 
-  // 🆕 Méthode pour vérifier si une ordonnance peut être modifiée
+ 
   canBeModified(statut) {
     const statutsModifiables = ['Brouillon', 'Validée'];
     return statutsModifiables.includes(statut);
   }
 
-  // 🆕 Méthode pour vérifier si une ordonnance peut être délivrée
   canBeDelivered(statut) {
     const statutsDelivrables = ['Validée', 'En préparation'];
     return statutsDelivrables.includes(statut);

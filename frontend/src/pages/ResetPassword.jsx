@@ -1,4 +1,3 @@
-// src/pages/ResetPassword.jsx
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Button, Spinner } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';

@@ -1,4 +1,3 @@
-// components/common/UI/ConfirmationModal.jsx
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { BsCheckCircle, BsXCircle, BsExclamationTriangle, BsInfoCircle } from 'react-icons/bs';

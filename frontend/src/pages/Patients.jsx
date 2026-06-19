@@ -1,5 +1,4 @@
-// src/pages/Patients.jsx
-import React, { useState, useEffect } from 'react'; // Ajoutez useEffect
+import React, { useState, useEffect } from 'react'; 
 import { Container, Alert, Card, Pagination } from 'react-bootstrap';
 import { BsPeople, BsChevronDoubleRight, BsChevronDoubleLeft } from 'react-icons/bs';
 import PatientTable from '../components/patient/PatientTable';
@@ -9,14 +8,14 @@ import { useCrud } from '../hooks/useCrud';
 import NotificationToast from '../components/common/UI/NotificationToast';
 import PatientDetails from '../components/patient/PatientDetails';
 import ConfirmationModal from '../components/common/UI/ConfirmationModal';
-import { useAuth } from '../contexts/AuthContext'; // Ajoutez cette ligne
+import { useAuth } from '../contexts/AuthContext'; 
 
 const Patients = () => {
-  // Ajoutez la vérification d'authentification
+  
   const { isAuthenticated, loading: authLoading } = useAuth();
   
   const {
-    data: patients = [], // ✅ AJOUTEZ CETTE VALEUR PAR DÉFAUT
+    data: patients = [], 
     loading: crudLoading,
     error,
     create,
@@ -39,9 +38,9 @@ const Patients = () => {
     message: '',
     onConfirm: null,
   });
-  const [hasFetched, setHasFetched] = useState(false); // Ajoutez comme pour médecins
+  const [hasFetched, setHasFetched] = useState(false); 
 
-  // 🔄 AJOUTEZ CET EFFET POUR CHARGER LES DONNÉES
+  
   useEffect(() => {
     let isMounted = true;
 
@@ -63,7 +62,7 @@ const Patients = () => {
     };
   }, [hasFetched, fetchAll, isAuthenticated]);
 
-  // ✅ PROTECTION CONTRE undefined
+  
   const safePatients = Array.isArray(patients) ? patients : [];
   
   const indexOfLastPatient = currentPage * patientsPerPage;
@@ -71,7 +70,7 @@ const Patients = () => {
   const currentPatients = safePatients.slice(indexOfFirstPatient, indexOfLastPatient);
   const totalPages = Math.ceil(safePatients.length / patientsPerPage) || 1;
 
-  // 🔒 AJOUTEZ LA VÉRIFICATION D'AUTH
+ 
   if (authLoading) {
     return (
       <Container className="d-flex justify-content-center align-items-center" style={{ height: '60vh' }}>

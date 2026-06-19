@@ -1,4 +1,3 @@
-// src/contexts/AuthContext.jsx
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { utilisateurService } from '../services/utilisateurService';
 
@@ -8,9 +7,6 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  /**
-   * Vérifie si le token est valide et met à jour l'état user
-   */
   const checkAuth = useCallback(async () => {
     try {
       const token = localStorage.getItem('authToken');
@@ -19,11 +15,10 @@ export const AuthProvider = ({ children }) => {
         return;
       }
 
-      // ✅ Correction ici : le service retourne maintenant { success, data }
       const response = await utilisateurService.getProfile();
       
       if (response?.success && response?.data?.id) {
-        // Note: Votre backend retourne 'id' ou 'id_utilisateur' ?
+        
         setUser(response.data);
         localStorage.setItem('userData', JSON.stringify(response.data));
       } else {
@@ -33,22 +28,18 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('userData');
       }
     } catch (error) {
-      console.error('❌ Erreur vérification auth:', error.message);
+      console.error(' Erreur vérification auth:', error.message);
       setUser(null);
       localStorage.removeItem('authToken');
       localStorage.removeItem('userData');
     }
   }, []);
 
-  /**
-   * Connexion
-   */
   const login = async (email, password) => {
     try {
-      // ✅ Assurez-vous d'envoyer les bons noms de champs
       const response = await utilisateurService.login({ 
         email, 
-        mot_de_passe: password // Forcez 'mot_de_passe' si nécessaire
+        mot_de_passe: password 
       });
       
       if (response?.success && response?.data?.token && response?.data?.user) {
@@ -72,9 +63,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  /**
-   * Initialisation au démarrage
-   */
   useEffect(() => {
     const initializeAuth = async () => {
       await checkAuth();

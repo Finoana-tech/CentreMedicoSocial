@@ -1,4 +1,3 @@
-// src/components/dashboard/LoadingSpinner.jsx
 import React from 'react';
 import { Spinner } from 'react-bootstrap';
 
@@ -31,7 +30,6 @@ const LoadingSpinner = ({
   return spinner;
 };
 
-// Variantes prédéfinies pour différents contextes
 export const CardLoadingSpinner = () => (
   <div className="text-center py-3">
     <Spinner animation="border" variant="primary" size="sm" />

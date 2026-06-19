@@ -1,12 +1,10 @@
-/* src/components/common/Layout/Layout.css */
-
 .layout-container {
   display: flex;
   min-height: 100vh;
 }
 
 .sidebar-wrapper {
-  width: 250px; /* largeur sidebar */
+  width: 250px; 
   flex-shrink: 0;
   background-color: #203A8D;
   color: white;
@@ -19,7 +17,7 @@
 }
 
 .main-content {
-  margin-left: 250px; /* décale le contenu principal à droite */
+  margin-left: 250px; 
   display: flex;
   flex-direction: column;
   width: calc(100% - 250px);
@@ -33,5 +31,5 @@
   flex-grow: 1;
   padding: 20px;
   background-color: #f8f9fa;
-  min-height: calc(100vh - 56px); /* 56px = hauteur du navbar bootstrap */
+  min-height: calc(100vh - 56px); 
 }

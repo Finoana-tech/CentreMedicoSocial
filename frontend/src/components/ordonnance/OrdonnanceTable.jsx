@@ -1,4 +1,3 @@
-// src/components/ordonnances/OrdonnanceTable.jsx
 import React, { useState, useMemo } from 'react';
 import { Table, Button, Form, Row, Col, Badge } from 'react-bootstrap';
 import { BsSearch, BsXCircle, BsEye, BsPencil, BsTrash,BsClipboardData } from 'react-icons/bs';
@@ -6,7 +5,6 @@ import { BsSearch, BsXCircle, BsEye, BsPencil, BsTrash,BsClipboardData } from 'r
 const OrdonnanceTable = ({ ordonnances, onEdit, onDelete, onCreate, onView, loading }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
-  // 🟢 Filtrage local optimisé
   const filteredOrdonnances = useMemo(() => {
     if (!searchQuery) return ordonnances;
 
@@ -23,7 +21,6 @@ const OrdonnanceTable = ({ ordonnances, onEdit, onDelete, onCreate, onView, load
     );
   }, [ordonnances, searchQuery]);
 
-  // Fonction pour déterminer le badge de statut
   const getStatutBadge = (statut) => {
     switch(statut) {
       case 'Validée':
@@ -41,7 +38,6 @@ const OrdonnanceTable = ({ ordonnances, onEdit, onDelete, onCreate, onView, load
     }
   };
 
-  // Fonction pour le badge urgence
   const getUrgenceBadge = (urgence) => {
     return urgence ? <Badge bg="danger" className="ms-1">Urgent</Badge> : null;
   };
@@ -51,7 +47,6 @@ const OrdonnanceTable = ({ ordonnances, onEdit, onDelete, onCreate, onView, load
     return new Date(dateString).toLocaleDateString('fr-FR');
   };
 
-  // Statistiques pour les indicateurs
   const stats = useMemo(() => ({
     validees: ordonnances.filter(o => o.statut === 'Validée').length,
     enPreparation: ordonnances.filter(o => o.statut === 'En préparation').length,
@@ -72,7 +67,6 @@ const OrdonnanceTable = ({ ordonnances, onEdit, onDelete, onCreate, onView, load
 
   return (
     <div>
-      {/*  Barre de Recherche + Bouton d'ajout */}
       <Row className="mb-4">
         <Col md={8}>
           <Form.Group className="d-flex align-items-center">
@@ -241,7 +235,6 @@ const OrdonnanceTable = ({ ordonnances, onEdit, onDelete, onCreate, onView, load
         </Table>
       </div>
 
-      {/* 🟢 Résumé avec statistiques rapides */}
       {ordonnances.length > 0 && (
         <div className="d-flex justify-content-between align-items-center mt-3 p-3 bg-light rounded">
           <div className="d-flex align-items-center gap-3">
@@ -254,8 +247,7 @@ const OrdonnanceTable = ({ ordonnances, onEdit, onDelete, onCreate, onView, load
               </Badge>
             )}
           </div>
-          
-          {/* Indicateurs rapides */}
+
           <div className="d-flex gap-3">
             <small className="text-muted d-flex align-items-center gap-1">
               <Badge bg="success">{stats.validees}</Badge>

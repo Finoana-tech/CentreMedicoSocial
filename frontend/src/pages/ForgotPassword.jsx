@@ -1,4 +1,3 @@
-// src/pages/ForgotPassword.jsx
 import React, { useState } from 'react';
 import { Container, Row, Col, Card, Form, Button, Spinner } from 'react-bootstrap';
 import { utilisateurService } from '../services/utilisateurService';

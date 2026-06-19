@@ -1,4 +1,3 @@
-// src/components/medecin/MedecinTable.jsx
 import React, { useState, useMemo } from 'react';
 import { Table, Button, Form, Row, Col, Badge } from 'react-bootstrap';
 import { BsSearch, BsXCircle, BsPersonVcard, BsEye, BsPencil, BsTrash } from 'react-icons/bs';

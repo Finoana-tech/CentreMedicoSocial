@@ -1,15 +1,11 @@
 const PatientModel = require('../models/patientModel');
 
 class PatientController {
-  // Créer un nouveau patient
   async create(req, res) {
     try {
-      console.log('🔍 POST /api/patient - Début');
-      console.log('📦 Données reçues:', req.body);
       
       const { nom, prenom, date_naissance, sexe } = req.body;
 
-      // Validation des champs obligatoires
       if (!nom || !prenom || !date_naissance || !sexe) {
         return res.status(400).json({
           success: false,
@@ -17,9 +13,7 @@ class PatientController {
         });
       }
 
-      console.log('✅ Validation des données réussie');
       const newPatient = await PatientModel.create(req.body);
-      console.log('✅ Patient créé avec succès:', newPatient);
       
       res.status(201).json({
         success: true,
@@ -28,7 +22,7 @@ class PatientController {
       });
 
     } catch (err) {
-      console.error('❌ Erreur création patient:', err);
+      console.error(' Erreur création patient:', err);
       res.status(500).json({ 
         success: false,
         message: 'Erreur lors de la création du patient',
@@ -40,9 +34,7 @@ class PatientController {
   // Obtenir tous les patients
   async getAll(req, res) {
     try {
-      console.log('🔍 GET /api/patient - Début');
       const patients = await PatientModel.getAll();
-      console.log('✅ Patients récupérés:', patients.length);
       
       res.json({
         success: true,
@@ -51,7 +43,7 @@ class PatientController {
         count: patients.length
       });
     } catch (err) {
-      console.error('❌ Erreur récupération patients:', err);
+      console.error(' Erreur récupération patients:', err);
       res.status(500).json({ 
         success: false,
         message: 'Erreur lors de la récupération des patients',
@@ -64,7 +56,6 @@ class PatientController {
   async getById(req, res) {
     try {
       const id = req.params.id;
-      console.log(`🔍 GET /api/patient/${id} - Début`);
       
       if (!id || isNaN(id)) {
         return res.status(400).json({
@@ -82,7 +73,6 @@ class PatientController {
         });
       }
 
-      console.log('✅ Patient récupéré:', patient);
       res.json({
         success: true,
         message: 'Patient récupéré avec succès',
@@ -90,7 +80,7 @@ class PatientController {
       });
 
     } catch (err) {
-      console.error('❌ Erreur récupération patient:', err);
+      console.error(' Erreur récupération patient:', err);
       res.status(500).json({ 
         success: false,
         message: 'Erreur lors de la récupération du patient',
@@ -99,12 +89,9 @@ class PatientController {
     }
   }
 
-  // Mettre à jour un patient
   async update(req, res) {
     try {
       const id = req.params.id;
-      console.log(`🔍 PUT /api/patient/${id} - Début`);
-      console.log('📦 Données reçues:', req.body);
       
       if (!id || isNaN(id)) {
         return res.status(400).json({
@@ -115,7 +102,6 @@ class PatientController {
 
       const { nom, prenom, date_naissance, sexe } = req.body;
 
-      // Validation des champs obligatoires
       if (!nom || !prenom || !date_naissance || !sexe) {
         return res.status(400).json({
           success: false,
@@ -132,7 +118,6 @@ class PatientController {
         });
       }
 
-      console.log('✅ Patient mis à jour:', updatedPatient);
       res.json({
         success: true,
         message: 'Patient mis à jour avec succès',
@@ -140,7 +125,7 @@ class PatientController {
       });
 
     } catch (err) {
-      console.error('❌ Erreur mise à jour patient:', err);
+      console.error(' Erreur mise à jour patient:', err);
       res.status(500).json({ 
         success: false,
         message: 'Erreur lors de la mise à jour du patient',
@@ -153,7 +138,6 @@ class PatientController {
   async delete(req, res) {
     try {
       const id = req.params.id;
-      console.log(`🔍 DELETE /api/patient/${id} - Début`);
       
       if (!id || isNaN(id)) {
         return res.status(400).json({
@@ -170,15 +154,13 @@ class PatientController {
           message: 'Patient non trouvé'
         });
       }
-
-      console.log('✅ Patient supprimé avec succès');
       res.json({
         success: true,
         message: 'Patient supprimé avec succès'
       });
 
     } catch (err) {
-      console.error('❌ Erreur suppression patient:', err);
+      console.error(' Erreur suppression patient:', err);
       res.status(500).json({ 
         success: false,
         message: 'Erreur lors de la suppression du patient',
@@ -191,7 +173,6 @@ class PatientController {
   async search(req, res) {
     try {
       const { q } = req.query;
-      console.log(`🔍 GET /api/patient/search/all?q=${q} - Début`);
       
       if (!q || q.trim().length < 2) {
         return res.status(400).json({
@@ -210,7 +191,7 @@ class PatientController {
       });
 
     } catch (err) {
-      console.error('❌ Erreur recherche patients:', err);
+      console.error(' Erreur recherche patients:', err);
       res.status(500).json({ 
         success: false,
         message: 'Erreur lors de la recherche',
@@ -222,7 +203,7 @@ class PatientController {
   // Obtenir les statistiques
   async getStats(req, res) {
     try {
-      console.log('🔍 GET /api/patient/stats/statistiques - Début');
+
       const stats = await PatientModel.getStats();
       
       res.json({
@@ -232,7 +213,7 @@ class PatientController {
       });
 
     } catch (err) {
-      console.error('❌ Erreur statistiques patients:', err);
+      console.error(' Erreur statistiques patients:', err);
       res.status(500).json({ 
         success: false,
         message: 'Erreur lors de la récupération des statistiques',
@@ -244,7 +225,7 @@ class PatientController {
   // Obtenir les tuteurs potentiels
   async getTuteursPotentiels(req, res) {
     try {
-      console.log('🔍 GET /api/patient/tuteurs/potentiels - Début');
+
       const tuteurs = await PatientModel.getTuteursPotentiels();
       
       res.json({
@@ -254,7 +235,7 @@ class PatientController {
       });
 
     } catch (err) {
-      console.error('❌ Erreur tuteurs potentiels:', err);
+      console.error(' Erreur tuteurs potentiels:', err);
       res.status(500).json({ 
         success: false,
         message: 'Erreur lors de la récupération des tuteurs potentiels',
@@ -267,7 +248,6 @@ class PatientController {
   async getByTuteur(req, res) {
     try {
       const { tuteurId } = req.params;
-      console.log(`🔍 GET /api/patient/tuteur/${tuteurId} - Début`);
       
       if (!tuteurId || isNaN(tuteurId)) {
         return res.status(400).json({
@@ -285,7 +265,7 @@ class PatientController {
       });
 
     } catch (err) {
-      console.error('❌ Erreur patients par tuteur:', err);
+      console.error(' Erreur patients par tuteur:', err);
       res.status(500).json({ 
         success: false,
         message: 'Erreur lors de la récupération des patients du tuteur',
@@ -297,7 +277,7 @@ class PatientController {
   // Obtenir les patients avec dernier rendez-vous
   async getPatientsAvecDernierRV(req, res) {
     try {
-      console.log('🔍 GET /api/patient/dernier-rv/liste - Début');
+      
       const patients = await PatientModel.getPatientsAvecDernierRV();
       
       res.json({

@@ -1,11 +1,7 @@
-// src/services/utilisateurService.js
 import { apiService } from './api';
 
 class UtilisateurService {
-  /* --------------------------------------------------------------------------
-     🔐 AUTHENTIFICATION
-  -------------------------------------------------------------------------- */
-
+  
   async login(data) {
     try {
       const normalizedData = this.normalizeLoginData(data);
@@ -20,7 +16,7 @@ class UtilisateurService {
       this.refreshUserData(result);
       return result;
     } catch (error) {
-      console.error('❌ UtilisateurService.login - Erreur:', error);
+      console.error(' UtilisateurService.login - Erreur:', error);
       throw new Error(error.message || 'Erreur lors de la connexion');
     }
   }
@@ -39,7 +35,7 @@ class UtilisateurService {
       this.refreshUserData(result);
       return result;
     } catch (error) {
-      console.error('❌ UtilisateurService.register - Erreur:', error);
+      console.error(' UtilisateurService.register - Erreur:', error);
       throw new Error(error.message || 'Erreur lors de l\'inscription');
     }
   }
@@ -57,7 +53,7 @@ class UtilisateurService {
       this.clearAuthData();
       return { success: true };
     } catch (error) {
-      console.error('❌ UtilisateurService.logout - Erreur:', error);
+      console.error(' UtilisateurService.logout - Erreur:', error);
       this.clearAuthData();
       throw new Error(error.message || 'Erreur lors de la déconnexion');
     }
@@ -80,15 +76,12 @@ class UtilisateurService {
 
       return result;
     } catch (error) {
-      console.error('❌ UtilisateurService.getProfile - Erreur:', error);
+      console.error(' UtilisateurService.getProfile - Erreur:', error);
       if (error.message.includes('401')) this.clearAuthData();
       throw new Error(error.message || 'Erreur lors de la récupération du profil');
     }
   }
 
-  /* --------------------------------------------------------------------------
-     🧑‍💼 GESTION UTILISATEURS (ADMIN)
-  -------------------------------------------------------------------------- */
 
   getAll() {
     return this.listUsers();
@@ -108,7 +101,7 @@ class UtilisateurService {
       if (!response.ok || !result.success) throw new Error(result.message || 'Erreur chargement utilisateurs');
       return result.data;
     } catch (error) {
-      console.error('❌ UtilisateurService.listUsers - Erreur:', error);
+      console.error(' UtilisateurService.listUsers - Erreur:', error);
       throw new Error(error.message || 'Erreur lors de la récupération des utilisateurs');
     }
   }
@@ -130,7 +123,7 @@ class UtilisateurService {
       if (!response.ok || !result.success) throw new Error(result.message || 'Erreur création utilisateur');
       return result.data;
     } catch (error) {
-      console.error('❌ UtilisateurService.createUser - Erreur:', error);
+      console.error(' UtilisateurService.createUser - Erreur:', error);
       throw new Error(error.message || 'Erreur lors de la création de l’utilisateur');
     }
   }
@@ -151,7 +144,7 @@ class UtilisateurService {
       if (!response.ok || !result.success) throw new Error(result.message || 'Erreur mise à jour utilisateur');
       return result.data;
     } catch (error) {
-      console.error('❌ UtilisateurService.updateUser - Erreur:', error);
+      console.error(' UtilisateurService.updateUser - Erreur:', error);
       throw new Error(error.message || 'Erreur lors de la mise à jour de l’utilisateur');
     }
   }
@@ -171,7 +164,7 @@ class UtilisateurService {
       if (!response.ok || !result.success) throw new Error(result.message || 'Erreur suppression utilisateur');
       return result.data;
     } catch (error) {
-      console.error('❌ UtilisateurService.deleteUser - Erreur:', error);
+      console.error(' UtilisateurService.deleteUser - Erreur:', error);
       throw new Error(error.message || 'Erreur lors de la suppression de l’utilisateur');
     }
   }
@@ -191,14 +184,10 @@ class UtilisateurService {
       if (!response.ok || !result.success) throw new Error(result.message || 'Erreur activation / désactivation');
       return result.data;
     } catch (error) {
-      console.error('❌ UtilisateurService.toggleUser - Erreur:', error);
+      console.error(' UtilisateurService.toggleUser - Erreur:', error);
       throw new Error(error.message || 'Erreur lors de la mise à jour du statut utilisateur');
     }
   }
-
-  /* --------------------------------------------------------------------------
-     🔑 MOT DE PASSE OUBLIÉ / RESET
-  -------------------------------------------------------------------------- */
 
   async requestPasswordReset(email) {
     try {
@@ -210,7 +199,6 @@ class UtilisateurService {
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || 'Erreur demande de réinitialisation');
 
-      // ⚡ Retourne token et email pour frontend (simulation d'email)
       return {
         success: true,
         message: 'Un email de réinitialisation a été envoyé si l’adresse existe.',
@@ -218,7 +206,7 @@ class UtilisateurService {
         token: result.token
       };
     } catch (error) {
-      console.error('❌ UtilisateurService.requestPasswordReset - Erreur:', error);
+      console.error(' UtilisateurService.requestPasswordReset - Erreur:', error);
       throw new Error(error.message || 'Erreur lors de la demande de réinitialisation');
     }
   }
@@ -239,14 +227,10 @@ class UtilisateurService {
         data: result.data
       };
     } catch (error) {
-      console.error('❌ UtilisateurService.resetPassword - Erreur:', error);
+      console.error(' UtilisateurService.resetPassword - Erreur:', error);
       throw new Error(error.message || 'Erreur lors de la réinitialisation du mot de passe');
     }
   }
-
-  /* --------------------------------------------------------------------------
-     🛠️ MÉTHODES UTILITAIRES
-  -------------------------------------------------------------------------- */
 
   refreshUserData(result) {
     if (result?.data?.token) {

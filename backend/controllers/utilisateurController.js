@@ -1,14 +1,12 @@
-// controllers/utilisateurController.js
 const UtilisateurModel = require("../models/utilisateurModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const db = require("../config/db"); // Pour vérification medecin existant
+const db = require("../config/db"); 
 
 const SECRET = process.env.JWT_SECRET || "secret-key";
 
 const UtilisateurController = {
 
-  // Connexion
   async login(req, res) {
     try {
       const { email, mot_de_passe } = req.body;
@@ -69,7 +67,7 @@ const UtilisateurController = {
     }
   },
 
-  // 🔹 Création d'utilisateur
+  //  Création d'utilisateur
   async create(req, res) {
     try {
       if (req.user.role !== "admin") return res.status(403).json({ message: "Accès refusé" });
@@ -205,8 +203,6 @@ const UtilisateurController = {
 
       // Génération d’un token temporaire pour la réinitialisation (1h)
       const resetToken = jwt.sign({ email: result.email }, SECRET, { expiresIn: "1h" });
-
-      //  Pas d'envoi email, juste renvoyer le token au frontend
       res.json({
         success: true,
         message: "Email vérifié, vous pouvez réinitialiser le mot de passe",

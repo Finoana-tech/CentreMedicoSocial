@@ -1,4 +1,3 @@
-// src/pages/Medecins.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Alert, Card, Pagination } from 'react-bootstrap';
 import { BsPersonVcard, BsChevronDoubleRight, BsChevronDoubleLeft } from 'react-icons/bs';
@@ -114,7 +113,7 @@ const Medecins = () => {
       onConfirm: async () => {
         try {
           if (editingMedecin) {
-            // CORRECTION : Utiliser l'ID correct (id_medecin ou id)
+            
             const medecinId = editingMedecin.id_medecin || editingMedecin.id;
             await update(medecinId, medecinData);
             setToast({ show: true, message: 'Medecin modifie avec succes !', type: 'success' });

@@ -33,18 +33,12 @@ const Utilisateurs = () => {
     onConfirm: null,
   });
 
-  /* =========================
-     Chargement initial
-  ========================= */
   useEffect(() => {
     fetchAll();
   }, []);
 
   const safeUtilisateurs = Array.isArray(utilisateurs) ? utilisateurs : [];
 
-  /* =========================
-     Pagination
-  ========================= */
   const totalPages = Math.max(1, Math.ceil(safeUtilisateurs.length / usersPerPage));
   const indexOfLast = currentPage * usersPerPage;
   const indexOfFirst = indexOfLast - usersPerPage;
@@ -52,9 +46,7 @@ const Utilisateurs = () => {
 
   const handlePageChange = (page) => setCurrentPage(page);
 
-  /* =========================
-     Actions CRUD
-  ========================= */
+
   const handleCreate = () => {
     setEditingUser(null);
     setShowForm(true);
@@ -112,7 +104,7 @@ const Utilisateurs = () => {
       }
       setShowForm(false);
       setEditingUser(null);
-      fetchAll(); // Recharger la liste
+      fetchAll();
     } catch {
       setToast({
         show: true,
@@ -122,9 +114,7 @@ const Utilisateurs = () => {
     }
   };
 
-  /* =========================
-     Pagination UI
-  ========================= */
+  
   const renderPagination = () => (
     <Pagination>
       <Pagination.Prev
@@ -147,9 +137,6 @@ const Utilisateurs = () => {
     </Pagination>
   );
 
-  /* =========================
-     Render
-  ========================= */
   return (
     <Container fluid className="p-4">
       <h1 className="h2 fw-bold mb-4">
@@ -185,7 +172,7 @@ const Utilisateurs = () => {
         show={showForm}
         onHide={() => { setShowForm(false); setEditingUser(null); }}
         user={editingUser}
-        onSuccess={handleSubmit}  // ✅ BON NOM (correspond à la définition)
+        onSuccess={handleSubmit}  
       />
 
       <NotificationToast

@@ -13,7 +13,7 @@ export const useSearch = (data = [], searchFields = [], options = {}) => {
   const [filters, setFilters] = useState({});
   const [sortConfig, setSortConfig] = useState(null);
 
-  // Debounce de la recherche
+  
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedQuery(searchQuery);
@@ -22,11 +22,9 @@ export const useSearch = (data = [], searchFields = [], options = {}) => {
     return () => clearTimeout(timer);
   }, [searchQuery, debounceDelay]);
 
-  // Recherche et filtrage
   const filteredData = useMemo(() => {
     let result = [...data];
 
-    // Recherche textuelle
     if (debouncedQuery.trim() && searchFields.length > 0) {
       const query = caseSensitive ? debouncedQuery : debouncedQuery.toLowerCase();
       
@@ -41,7 +39,6 @@ export const useSearch = (data = [], searchFields = [], options = {}) => {
       );
     }
 
-    // Filtres supplémentaires
     if (filters && Object.keys(filters).length > 0) {
       result = result.filter(item => {
         return Object.entries(filters).every(([field, filterValue]) => {
@@ -51,17 +48,14 @@ export const useSearch = (data = [], searchFields = [], options = {}) => {
           
           const itemValue = item[field];
           
-          // Filtre par valeur exacte
           if (typeof filterValue === 'string' || typeof filterValue === 'number') {
             return itemValue == filterValue;
           }
           
-          // Filtre par fonction personnalisée
           if (typeof filterValue === 'function') {
             return filterValue(itemValue);
           }
           
-          // Filtre par tableau de valeurs
           if (Array.isArray(filterValue)) {
             return filterValue.includes(itemValue);
           }
@@ -71,12 +65,10 @@ export const useSearch = (data = [], searchFields = [], options = {}) => {
       });
     }
 
-    // Fonction de filtrage personnalisée
     if (filterFn) {
       result = result.filter(filterFn);
     }
 
-    // Tri
     if (sortConfig) {
       const { key, direction } = sortConfig;
       result.sort((a, b) => {
@@ -92,7 +84,6 @@ export const useSearch = (data = [], searchFields = [], options = {}) => {
     return result;
   }, [data, debouncedQuery, searchFields, filters, sortConfig, caseSensitive, filterFn]);
 
-  // Gestion de la recherche
   const handleSearch = useCallback((query) => {
     setSearchQuery(query);
   }, []);
@@ -102,7 +93,6 @@ export const useSearch = (data = [], searchFields = [], options = {}) => {
     setDebouncedQuery('');
   }, []);
 
-  // Gestion des filtres
   const setFilter = useCallback((field, value) => {
     setFilters(prev => ({
       ...prev,
@@ -122,7 +112,7 @@ export const useSearch = (data = [], searchFields = [], options = {}) => {
     setFilters({});
   }, []);
 
-  // Gestion du tri
+
   const handleSort = useCallback((key) => {
     setSortConfig(prev => {
       if (prev && prev.key === key) {
@@ -140,31 +130,25 @@ export const useSearch = (data = [], searchFields = [], options = {}) => {
   }, []);
 
   return {
-    // État
     searchQuery,
     debouncedQuery,
     filters,
     sortConfig,
     
-    // Données
     filteredData,
     resultsCount: filteredData.length,
     totalCount: data.length,
     
-    // Actions de recherche
     handleSearch,
     clearSearch,
     
-    // Actions de filtrage
     setFilter,
     clearFilter,
     clearAllFilters,
     
-    // Actions de tri
     handleSort,
     clearSort,
     
-    // États dérivés
     hasSearch: !!debouncedQuery.trim(),
     hasFilters: Object.keys(filters).length > 0,
     hasSort: !!sortConfig,

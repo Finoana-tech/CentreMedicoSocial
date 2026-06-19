@@ -200,7 +200,7 @@ const RendezVousDetails = ({
     setStatusLoading(true);
     try {
       await onStatusChange(rendezVous, nouveauStatut);
-      onHide(); // Fermer la modal après changement de statut
+      onHide(); 
     } catch (error) {
       console.error('Erreur changement statut:', error);
     } finally {

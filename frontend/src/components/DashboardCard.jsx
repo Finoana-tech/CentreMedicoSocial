@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Row, Col } from 'react-bootstrap';
-import { BsArrowUp, BsPerson, BsCalendarEvent, BsFileText, BsPeople } from 'react-icons/bs';
+import { BsPerson, BsCalendarEvent, BsFileText, BsPeople } from 'react-icons/bs';
 
 const DashboardCard = ({ title, value, detail, icon, iconBgColor, valueColor }) => {
   const IconComponent = icon;
@@ -34,5 +34,4 @@ const DashboardCard = ({ title, value, detail, icon, iconBgColor, valueColor }) 
   );
 };
 
-// Exportez également les icônes pour les utiliser dans le composant parent
 export { DashboardCard, BsPerson, BsCalendarEvent, BsFileText, BsPeople };

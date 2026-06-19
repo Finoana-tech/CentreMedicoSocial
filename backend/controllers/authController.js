@@ -1,16 +1,13 @@
-//  backend/controllers/authController.js
 const UserModel = require('../models/utilisateurModel');
 const { hashPassword, comparePasswords } = require('../utils/passwordUtils');
 const jwt = require('jsonwebtoken');
 
 const authController = {
 
-  //  CONNEXION UTILISATEUR
   async login(req, res) {
     try {
       const { email, mot_de_passe } = req.body;
 
-      //  VALIDATION DES DONNÉES
       if (!email || !mot_de_passe) {
         return res.status(400).json({ 
           success: false,
@@ -18,7 +15,6 @@ const authController = {
         });
       }
 
-      //  VÉRIFICATION SI L'UTILISATEUR EXISTE
       const user = await UserModel.findByEmail(email);
       if (!user) {
         return res.status(401).json({ 
@@ -27,7 +23,6 @@ const authController = {
         });
       }
 
-      //  VÉRIFICATION DU MOT DE PASSE
       const isPasswordValid = await comparePasswords(mot_de_passe, user.mot_de_passe);
       if (!isPasswordValid) {
         return res.status(401).json({ 
@@ -47,10 +42,9 @@ const authController = {
       const token = jwt.sign(
         tokenPayload,
         process.env.JWT_SECRET,
-        { expiresIn: '24h' } // Token valable 24 heures
+        { expiresIn: '24h' } 
       );
 
-      //  RÉPONSE SUCCÈS
       res.json({
         success: true,
         message: 'Connexion réussie',
@@ -73,10 +67,9 @@ const authController = {
     }
   },
 
-  //  RÉCUPÉRATION DU PROFIL UTILISATEUR
   async getProfile(req, res) {
     try {
-      // req.user est injecté par le middleware authenticateToken
+
       const user = await UserModel.findById(req.user.id_utilisateur);
       
       if (!user) {
@@ -86,7 +79,6 @@ const authController = {
         });
       }
 
-      // NE JAMAIS ENVOYER LE MOT DE PASSE DANS LA RÉPONSE
       const { mot_de_passe, ...userWithoutPassword } = user;
 
       res.json({
@@ -103,12 +95,10 @@ const authController = {
     }
   },
 
-  //  INSCRIPTION D'UN NOUVEL UTILISATEUR (Admin seulement)
   async register(req, res) {
     try {
       const { email, mot_de_passe, role, id_medecin } = req.body;
 
-      // . VALIDATION DES DONNÉES
       if (!email || !mot_de_passe || !role) {
         return res.status(400).json({ 
           success: false,
@@ -116,7 +106,6 @@ const authController = {
         });
       }
 
-      // . VÉRIFICATION SI L'EMAIL EXISTE DÉJÀ
       const existingUser = await UserModel.findByEmail(email);
       if (existingUser) {
         return res.status(409).json({ 
@@ -125,10 +114,7 @@ const authController = {
         });
       }
 
-      // . HACHAGE DU MOT DE PASSE
       const hashedPassword = await hashPassword(mot_de_passe);
-
-      // . CRÉATION DE L'UTILISATEUR
       const userId = await UserModel.create({
         email,
         mot_de_passe: hashedPassword,
@@ -136,7 +122,6 @@ const authController = {
         id_medecin: id_medecin || null
       });
 
-      // 5. RÉPONSE SUCCÈS
       res.status(201).json({
         success: true,
         message: 'Utilisateur créé avec succès',
@@ -160,7 +145,6 @@ const authController = {
     }
   },
 
-  //  MODIFICATION DU MOT DE PASSE
   async changePassword(req, res) {
     try {
       const { currentPassword, newPassword } = req.body;
@@ -173,7 +157,6 @@ const authController = {
         });
       }
 
-      // 1. RÉCUPÉRER L'UTILISATEUR
       const user = await UserModel.findById(userId);
       if (!user) {
         return res.status(404).json({ 
@@ -182,7 +165,6 @@ const authController = {
         });
       }
 
-      //  VÉRIFIER LE MOT DE PASSE ACTUEL
       const isCurrentPasswordValid = await comparePasswords(currentPassword, user.mot_de_passe);
       if (!isCurrentPasswordValid) {
         return res.status(401).json({ 
@@ -191,9 +173,7 @@ const authController = {
         });
       }
 
-      //  HACHER ET METTRE À JOUR LE NOUVEAU MOT DE PASSE
       const newHashedPassword = await hashPassword(newPassword);
-      // Vous devrez ajouter cette méthode dans votre UserModel
       await UserModel.updatePassword(userId, newHashedPassword);
 
       res.json({
@@ -210,11 +190,8 @@ const authController = {
     }
   },
 
-  //  DÉCONNEXION (côté client généralement, mais peut être utile pour invalidation)
   async logout(req, res) {
     try {
-      // En général, la déconnexion se fait côté client en supprimant le token
-      // Mais vous pourriez implémenter une blacklist de tokens ici si nécessaire
       
       res.json({
         success: true,

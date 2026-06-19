@@ -1,13 +1,10 @@
-// controllers/ordonnanceController.js
 const OrdonnanceModel = require('../models/ordonnanceModel');
 const LigneOrdonnanceModel = require('../models/ligneOrdonnanceModel');
 const { jsPDF } = require('jspdf');
 require('jspdf-autotable');
 
-// Déclarez la classe
+
 class OrdonnanceController {
-  
-  // ------------------- CRUD -------------------
   async create(req, res) {
     try {
       const { id_patient, id_medecin, date_prescription } = req.body;
@@ -119,7 +116,7 @@ class OrdonnanceController {
     }
   }
 
-  // ------------------- Recherche -------------------
+ 
   async search(req, res) {
     try {
       const { q } = req.query;
@@ -133,7 +130,6 @@ class OrdonnanceController {
     }
   }
 
-  // ------------------- WORKFLOW -------------------
   async valider(req, res) {
     try {
       const id = req.params.id;
@@ -195,7 +191,6 @@ class OrdonnanceController {
     }
   }
 
-  // ------------------- RENOUVELLEMENT -------------------
   async utiliserRenouvellement(req, res) {
     try {
       const id = req.params.id;
@@ -237,7 +232,6 @@ class OrdonnanceController {
     }
   }
 
-  // ------------------- STATISTIQUES -------------------
   async getStatsByStatut(req, res) {
     try {
       const stats = await OrdonnanceModel.getStatsByStatut();
@@ -293,7 +287,6 @@ class OrdonnanceController {
     }
   }
 
-  // ------------------- MÉTHODES MANQUANTES POUR LES ROUTES -------------------
   async getDetailsById(req, res) {
     try {
       const id = req.params.id;
@@ -318,49 +311,32 @@ class OrdonnanceController {
     }
   }
 
-  // ------------------- EXPORT PDF -------------------
-  // controllers/ordonnanceController.js - SEULEMENT la méthode exportToPDF
 async exportToPDF(req, res) {
   try {
-    console.log('=== DÉBUT EXPORT PDF ===');
     const id = req.params.id;
-    console.log('ID ordonnance:', id);
     
     if (!id || isNaN(id)) {
-      console.log('❌ ID invalide');
       return res.status(400).json({ 
         success: false, 
         message: 'ID invalide' 
       });
     }
 
-    // Récupérer les données complètes
-    console.log('📥 Récupération des données...');
-    
-    // 1. Récupérer l'ordonnance avec les données patient/médecin
     const ordonnance = await OrdonnanceModel.getById(id);
     if (!ordonnance) {
-      console.log('❌ Ordonnance non trouvée');
       return res.status(404).json({ 
         success: false, 
         message: 'Ordonnance non trouvée' 
       });
     }
     
-    // 2. Récupérer les médicaments
     const medicaments = await LigneOrdonnanceModel.getByOrdonnanceId(id);
-    console.log(`📊 ${medicaments?.length || 0} médicaments trouvés`);
-    
-    // 3. Combiner les données
+
     const ordonnanceData = {
       ...ordonnance,
       medicaments: medicaments || []
     };
 
-    console.log('📊 Données récupérées: SUCCÈS');
-    console.log('Structure ordonnance:', Object.keys(ordonnanceData));
-    
-    // Créer le document PDF
     const doc = new jsPDF();
     doc.setFont('helvetica');
     
@@ -389,8 +365,6 @@ async exportToPDF(req, res) {
     const marginRight = 15;
     const contentWidth = pageWidth - marginLeft - marginRight;
 
-    // ============ EN-TÊTE JIRAMA ============
-    console.log('📝 Ajout en-tête...');
     doc.setFontSize(20);
     doc.setTextColor(0, 51, 102);
     afficherTexte('CENTRE MEDICO-SOCIAL - JIRAMA', pageWidth / 2, yPosition, { align: 'center' });
@@ -406,8 +380,6 @@ async exportToPDF(req, res) {
     doc.line(marginLeft, yPosition, pageWidth - marginRight, yPosition);
     yPosition += 15;
 
-    // ============ INFORMATIONS DE BASE ============
-    console.log('📝 Ajout informations de base...');
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     afficherTexte('INFORMATIONS ORDONNANCE', marginLeft, yPosition);
@@ -418,7 +390,6 @@ async exportToPDF(req, res) {
     afficherTexte(`Date: ${new Date(ordonnanceData.date_prescription || new Date()).toLocaleDateString('fr-FR')}`, pageWidth - 60, yPosition);
     yPosition += 7;
     
-    // Statut avec couleur
     const statut = ordonnanceData.statut || 'En attente';
     doc.setFont('helvetica', 'bold');
     afficherTexte(`Statut: ${statut}`, marginLeft, yPosition);
@@ -429,8 +400,7 @@ async exportToPDF(req, res) {
     }
     yPosition += 15;
 
-    // ============ INFORMATIONS PATIENT ============
-    console.log('📝 Ajout informations patient...');
+    //Informations du patient
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     afficherTexte('INFORMATIONS PATIENT', marginLeft, yPosition);
@@ -450,8 +420,7 @@ async exportToPDF(req, res) {
     }
     yPosition += 10;
 
-    // ============ INFORMATIONS MÉDECIN ============
-    console.log('📝 Ajout informations médecin...');
+    // Information medécin
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     afficherTexte('MÉDECIN PRESCRIPTEUR', marginLeft, yPosition);
@@ -474,9 +443,7 @@ async exportToPDF(req, res) {
     }
     yPosition += 10;
 
-    // ============ DIAGNOSTIC ============
     if (ordonnanceData.diagnostic) {
-      console.log('📝 Ajout diagnostic...');
       doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
       afficherTexte('DIAGNOSTIC', marginLeft, yPosition);
@@ -488,9 +455,7 @@ async exportToPDF(req, res) {
       yPosition += (splitDiagnostic.length * 5) + 10;
     }
 
-    // ============ INSTRUCTIONS ============
     if (ordonnanceData.instructions) {
-      console.log('📝 Ajout instructions...');
       doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
       afficherTexte('INSTRUCTIONS MÉDICALES', marginLeft, yPosition);
@@ -502,7 +467,6 @@ async exportToPDF(req, res) {
       yPosition += (splitInstructions.length * 5) + 10;
     }
 
-    // ============ MÉDICAMENTS PRESCRITS ============
     if (ordonnanceData.medicaments && ordonnanceData.medicaments.length > 0) {
       console.log('📝 Ajout médicaments...');
       doc.setFontSize(12);
@@ -510,7 +474,6 @@ async exportToPDF(req, res) {
       afficherTexte('MÉDICAMENTS PRESCRITS', marginLeft, yPosition);
       yPosition += 10;
       
-      // Préparer les données du tableau
       const tableData = ordonnanceData.medicaments.map((med, index) => {
         return [
           String(index + 1),
@@ -526,7 +489,6 @@ async exportToPDF(req, res) {
         ];
       });
       
-      console.log(`📋 Génération tableau avec ${tableData.length} lignes...`);
       
       try {
         doc.autoTable({
@@ -566,7 +528,6 @@ async exportToPDF(req, res) {
           margin: { left: marginLeft, right: marginRight },
           tableWidth: 'auto',
           didParseCell: function (data) {
-            // Ajuster la hauteur des cellules pour le texte long
             if (data.row.index > 0 && (data.column.index === 1 || data.column.index === 8)) {
               data.cell.styles.cellPadding = { top: 2, right: 1, bottom: 2, left: 1 };
             }
@@ -574,10 +535,8 @@ async exportToPDF(req, res) {
         });
         
         yPosition = doc.lastAutoTable.finalY + 10;
-        console.log('✅ Tableau généré avec succès');
       } catch (tableError) {
-        console.error('❌ Erreur génération tableau:', tableError);
-        // Fallback : liste simple
+        console.error(' Erreur génération tableau:', tableError);
         doc.setFontSize(10);
         ordonnanceData.medicaments.forEach((med, index) => {
           const medText = `${index + 1}. ${med.nom_commercial || med.nom} - ${med.dosage || ''} - ${med.posologie || ''}`;
@@ -587,15 +546,12 @@ async exportToPDF(req, res) {
         yPosition += 10;
       }
     } else {
-      console.log('ℹ️ Aucun médicament...');
       doc.setFontSize(12);
       afficherTexte('Aucun médicament prescrit', marginLeft, yPosition);
       yPosition += 20;
     }
-    
-    // ============ OBSERVATIONS ============
+   
     if (ordonnanceData.notes) {
-      console.log('📝 Ajout observations...');
       doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
       afficherTexte('OBSERVATIONS', marginLeft, yPosition);
@@ -607,9 +563,7 @@ async exportToPDF(req, res) {
       yPosition += (splitNotes.length * 5) + 10;
     }
 
-    // ============ INFORMATIONS RENOUVELLEMENT ============
     if (ordonnanceData.renouvelable) {
-      console.log('📝 Ajout informations renouvellement...');
       doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
       afficherTexte('INFORMATIONS RENOUVELLEMENT', marginLeft, yPosition);
@@ -637,22 +591,16 @@ async exportToPDF(req, res) {
       yPosition += 10;
     }
 
-    // ============ SIGNATURE ============
     console.log(' Ajout signature...');
     const signatureY = Math.max(yPosition, doc.internal.pageSize.getHeight() - 40);
-    
-    // Ligne de signature
     doc.setLineWidth(0.5);
     doc.line(marginLeft + 80, signatureY, marginLeft + 160, signatureY);
     
     doc.setFontSize(12);
     afficherTexte('Signature et cachet du médecin', marginLeft, signatureY - 10);
     afficherTexte(`Dr. ${medecinNom} ${medecinPrenom}`, marginLeft + 80, signatureY + 5);
-    
-    // Date et lieu
     afficherTexte(`Fait à Antsirabe, le ${new Date().toLocaleDateString('fr-FR')}`, marginLeft, signatureY + 15);
-    
-    // ============ PIED DE PAGE ============
+   
     const footerY = doc.internal.pageSize.getHeight() - 10;
     doc.setFontSize(8);
     doc.setTextColor(128, 128, 128);
@@ -662,21 +610,17 @@ async exportToPDF(req, res) {
       footerY,
       { align: 'center' }
     );
-    
-    // ============ GÉNÉRATION PDF ============
-    console.log(' Génération du buffer PDF...');
+  
     const pdfBuffer = doc.output('arraybuffer');
     
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="ordonnance-JIRAMA-${ordonnanceData.id_ordonnance || id}.pdf"`);
     res.setHeader('Content-Length', pdfBuffer.byteLength);
     
-    console.log('✅ PDF généré avec succès, envoi...');
     res.send(Buffer.from(pdfBuffer));
-    console.log('=== EXPORT PDF RÉUSSI ===');
 
   } catch (error) {
-    console.error('❌ Erreur exportToPDF:', error);
+    console.error(' Erreur exportToPDF:', error);
     console.error('Stack:', error.stack);
     
     res.status(500).json({ 
@@ -688,5 +632,4 @@ async exportToPDF(req, res) {
 }
 }
 
-// EXPORT CRITIQUE : Exportez une instance de la classe
 module.exports = new OrdonnanceController();

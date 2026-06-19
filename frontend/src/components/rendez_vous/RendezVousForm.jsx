@@ -1,4 +1,3 @@
-// src/components/rendez_vous/RendezVousForm.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Container, 
@@ -16,7 +15,7 @@ import { BsArrowLeft, BsCalendar, BsClock, BsHourglass, BsPeople, BsPerson } fro
 import patientService from '../../services/patientService';
 import medecinService from '../../services/medecinService';
 import { rendezvousService } from '../../services/rendezVousService';
-//import RendezVousLocalNavCompact from './RendezVousLocalNav';
+
 
 const initialState = {
   id_patient: '',
@@ -29,7 +28,6 @@ const initialState = {
 
 const DUREE_RDV_MINUTES = 30;
 
-// Cache global
 let patientsCache = null;
 let medecinsCache = null;
 let cacheTimestamp = 0;
@@ -64,7 +62,7 @@ const RendezVousForm = () => {
       patients_count: patients.length
     });
 
-    // Debug des médecins disponibles
+
     if (medecins.length > 0) {
       console.log(' Médecins disponibles:', medecins.map(m => ({
         id: m.id_medecin,
@@ -74,13 +72,11 @@ const RendezVousForm = () => {
     }
   }, [formData.id_medecin, formData.id_patient, medecins, patients]);
 
-  // Charger le rôle utilisateur
   useEffect(() => {
     const role = localStorage.getItem('userRole') || 'assistant';
     setUserRole(role);
   }, []);
 
-  // Charger les stats pour la navbar
   const loadStats = useCallback(async () => {
     try {
       const statsData = await rendezvousService.getDashboardStats();
@@ -109,17 +105,11 @@ const RendezVousForm = () => {
             patientService.getAll(),
             medecinService.getAll()
           ]);
-          
-          // CORRECTION: S'assurer que les données ont le bon format
+
           const patientsList = Array.isArray(patientsData) ? patientsData : 
                              patientsData?.data || patientsData || [];
           const medecinsList = Array.isArray(medecinsData) ? medecinsData : 
                               medecinsData?.data || medecinsData || [];
-          
-          //console.log(' Patients bruts:', patientsData);
-          //console.log(' Médecins bruts:', medecinsData);
-          //console.log(' Patients traités:', patientsList);
-          //console.log(' Médecins traités:', medecinsList);
           
           patientsCache = patientsList;
           medecinsCache = medecinsList;
@@ -127,9 +117,6 @@ const RendezVousForm = () => {
           
           setPatients(patientsList);
           setMedecins(medecinsList);
-
-          //console.log(' Médecins chargés:', medecinsList.length);
-          //console.log(' Patients chargés:', patientsList.length);
         } catch (error) {
           console.error('Erreur chargement patients/médecins:', error);
           setPatients([]);
@@ -137,7 +124,6 @@ const RendezVousForm = () => {
         }
       }
 
-      // Si modification, charger le rendez-vous
       if (id) {
         try {
           setLoading(true);
@@ -186,12 +172,10 @@ const RendezVousForm = () => {
     
     setFormData(prev => ({ ...prev, [name]: value }));
     
-    // Effacer les erreurs quand l'utilisateur modifie le champ
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
     
-    // Effacer l'erreur de disponibilité quand les données changent
     if (availabilityError && (name === 'id_medecin' || name === 'date_rendez_vous' || name === 'heure_rendez_vous')) {
       setAvailabilityError('');
     }
@@ -215,8 +199,6 @@ const RendezVousForm = () => {
     if (!formData.date_rendez_vous) newErrors.date_rendez_vous = 'La date du rendez-vous est requise';
     if (!formData.heure_rendez_vous) newErrors.heure_rendez_vous = "L'heure du rendez-vous est requise";
     if (!formData.motif?.trim()) newErrors.motif = 'Le motif est requis';
-    
-    // Validation ID médecin - CORRECTION: seulement si une valeur est sélectionnée
     if (formData.id_medecin && formData.id_medecin !== '') {
       const medecinId = parseInt(formData.id_medecin);
       if (isNaN(medecinId) || medecinId <= 0) {
@@ -225,7 +207,6 @@ const RendezVousForm = () => {
       }
     }
 
-    // Validation ID patient - CORRECTION: seulement si une valeur est sélectionnée
     if (formData.id_patient && formData.id_patient !== '') {
       const patientId = parseInt(formData.id_patient);
       if (isNaN(patientId) || patientId <= 0) {
@@ -257,12 +238,10 @@ const RendezVousForm = () => {
       } else {
         const [heures, minutes] = formData.heure_rendez_vous.split(':').map(Number);
         const totalMinutes = heures * 60 + minutes;
-        
-        // Vérification des horaires de travail
-        const matinDebut = 7 * 60 + 30; // 07:30
-        const matinFin = 12 * 60;       // 12:00
-        const apresMidiDebut = 14 * 60; // 14:00
-        const apresMidiFin = 17 * 60 + 30; // 17:30
+        const matinDebut = 7 * 60 + 30; 
+        const matinFin = 12 * 60;       
+        const apresMidiDebut = 14 * 60; 
+        const apresMidiFin = 17 * 60 + 30; 
         
         const dansMatin = totalMinutes >= matinDebut && totalMinutes <= matinFin;
         const dansApresMidi = totalMinutes >= apresMidiDebut && totalMinutes <= apresMidiFin;
@@ -276,21 +255,19 @@ const RendezVousForm = () => {
     setErrors(newErrors);
     
     const isValid = Object.keys(newErrors).length === 0;
-    console.log(`✅ Validation ${isValid ? 'réussie' : 'échouée'}:`, newErrors);
     
     return isValid;
   }, [formData]);
 
   const checkAvailability = useCallback(async () => {
     if (!formData.id_medecin || !formData.date_rendez_vous || !formData.heure_rendez_vous) {
-      console.log('❌ Données manquantes pour vérification disponibilité');
       return false;
     }
 
     // Vérifier que l'ID médecin est valide
     const medecinId = parseInt(formData.id_medecin);
     if (isNaN(medecinId) || medecinId <= 0) {
-      console.error('❌ ID médecin invalide:', formData.id_medecin);
+      console.error(' ID médecin invalide:', formData.id_medecin);
       setAvailabilityError('ID du médecin invalide. Veuillez sélectionner un médecin valide.');
       return false;
     }
@@ -298,7 +275,7 @@ const RendezVousForm = () => {
     try {
       const dateTimeString = `${formData.date_rendez_vous}T${formData.heure_rendez_vous}:00`;
       
-      console.log('📤 Vérification disponibilité:', {
+      console.log(' Vérification disponibilité:', {
         medecinId,
         dateTimeString,
         isEditing,
@@ -312,10 +289,8 @@ const RendezVousForm = () => {
         excludeRdvId: isEditing ? id : null
       });
 
-      console.log('📥 Réponse disponibilité:', availability);
 
       if (!availability.disponible) {
-        // Message d'erreur spécifique selon la raison
         let errorMessage = 'Créneau non disponible';
         
         if (availability.raison) {
@@ -341,7 +316,7 @@ const RendezVousForm = () => {
       setAvailabilityError('');
       return true;
     } catch (err) {
-      console.error('❌ Erreur vérification disponibilité:', err);
+      console.error(' Erreur vérification disponibilité:', err);
       
       // Gestion spécifique des erreurs de disponibilité
       if (err.response?.data?.message) {
@@ -389,8 +364,6 @@ const RendezVousForm = () => {
     }
 
     console.log(' Disponibilité vérifiée: disponible');
-
-    // Construction des données pour le backend
     const dateTimeString = `${formData.date_rendez_vous}T${formData.heure_rendez_vous}:00`;
     
     const submitData = {
@@ -402,26 +375,19 @@ const RendezVousForm = () => {
       duree: DUREE_RDV_MINUTES
     };
 
-    console.log('📦 Données à envoyer:', submitData);
     
     try {
       setLoading(true);
       if (isEditing) {
-        console.log('✏️ Mise à jour rendez-vous ID:', id);
         await rendezvousService.update(id, submitData);
       } else {
-        console.log('🆕 Création nouveau rendez-vous');
         await rendezvousService.create(submitData);
       }
       
-      console.log('✅ Rendez-vous enregistré avec succès');
-      
-      // Redirection vers la liste après succès
       navigate('/rendez-vous');
     } catch (error) {
-      console.error('❌ Erreur soumission:', error);
+      console.error(' Erreur soumission:', error);
       
-      // Gestion spécifique des erreurs de disponibilité
       if (error.response?.data?.message) {
         const serverMessage = error.response.data.message;
         
@@ -622,7 +588,7 @@ const RendezVousForm = () => {
                           onChange={handleInputChange}
                           isInvalid={!!errors.heure_rendez_vous}
                           placeholder="HH:MM"
-                          step="300" // Pas de 5 minutes
+                          step="300" 
                         />
                         
                         <Form.Control.Feedback type="invalid">

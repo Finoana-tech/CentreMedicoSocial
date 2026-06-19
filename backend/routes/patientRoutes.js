@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const PatientController = require('../controllers/patientController');
 
-// ⚡ Routes spéciales à mettre avant les routes avec paramètre `:id`
 router.get('/search/all', PatientController.search);
 router.get('/stats/statistiques', PatientController.getStats);
 router.get('/tuteurs/potentiels', PatientController.getTuteursPotentiels);

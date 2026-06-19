@@ -1,7 +1,6 @@
 const { body, param, query } = require("express-validator");
 
 class ValidationMiddleware {
-  // Validation de la connexion
   validateLogin() {
     return [
       body("email")
@@ -13,8 +12,7 @@ class ValidationMiddleware {
         .withMessage("Le mot de passe est requis")
     ];
   }
-
-  // Validation de la création d'utilisateur
+  
   validateCreateUser() {
     return [
       body("email")
@@ -64,7 +62,6 @@ class ValidationMiddleware {
     ];
   }
 
-  // Validation de la mise à jour du profil utilisateur
   validateUpdateProfil() {
     return [
       body("email")
@@ -88,7 +85,6 @@ class ValidationMiddleware {
         .isInt({ min: 1 })
         .withMessage("ID médecin invalide"),
 
-      // 🔐 mot de passe OPTIONNEL (clé de ta règle métier)
       body("mot_de_passe")
         .optional()
         .isLength({ min: 6 })
@@ -96,8 +92,6 @@ class ValidationMiddleware {
     ];
   }
 
-
-  // Validation du changement de mot de passe
   validateUpdatePassword() {
     return [
       body("ancien_mot_de_passe")
@@ -109,7 +103,6 @@ class ValidationMiddleware {
     ];
   }
 
-  // Validation des paramètres de requête pour la pagination et recherche
   validatePagination() {
     return [
       query("page")

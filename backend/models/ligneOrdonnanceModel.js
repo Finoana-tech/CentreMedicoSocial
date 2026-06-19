@@ -1,7 +1,7 @@
 const db = require('../config/db');
 
 const LigneOrdonnanceModel = {
-  //  Récupérer toutes les lignes avec détails complets
+
   getAll: async () => {
     try {
       const [rows] = await db.execute(`
@@ -25,7 +25,6 @@ const LigneOrdonnanceModel = {
     }
   },
 
-  //  Récupérer les lignes d'une ordonnance spécifique
   getByOrdonnanceId: async (id_ordonnance) => {
     try {
       const [rows] = await db.execute(`
@@ -48,7 +47,6 @@ const LigneOrdonnanceModel = {
     }
   },
 
-  //  Récupérer une ligne spécifique par ID
   getById: async (id_ligne) => {
     try {
       const [rows] = await db.execute(`
@@ -221,7 +219,7 @@ const LigneOrdonnanceModel = {
     }
   },
 
-  //  NOUVEAU: Récupérer les lignes par statut
+  // Récupérer les lignes par statut
   getByStatut: async (statut) => {
     try {
       const [rows] = await db.execute(`
@@ -244,7 +242,7 @@ const LigneOrdonnanceModel = {
     }
   },
 
-  //  NOUVEAU: Récupérer les lignes en attente de délivrance
+  //Récupérer les lignes en attente de délivrance
   getEnAttenteDelivrance: async () => {
     try {
       const [rows] = await db.execute(`
@@ -268,7 +266,7 @@ const LigneOrdonnanceModel = {
     }
   },
 
-  //  NOUVEAU: Vérifier le stock disponible pour une ligne
+  //  Vérifier le stock disponible pour une ligne
   verifierStock: async (id_ligne) => {
     try {
       const [rows] = await db.execute(`
@@ -289,7 +287,7 @@ const LigneOrdonnanceModel = {
     }
   },
 
-  //  NOUVEAU: Calculer le total d'une ordonnance
+  //  Calculer le total d'une ordonnance
   getTotalOrdonnance: async (id_ordonnance) => {
     try {
       const [rows] = await db.execute(`

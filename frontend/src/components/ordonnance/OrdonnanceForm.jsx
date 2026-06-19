@@ -1,4 +1,3 @@
-// src/components/ordonnances/OrdonnanceForm.jsx
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Button, Row, Col, Card, Alert } from 'react-bootstrap';
 import { patientService } from '../../services/patientService';
@@ -18,7 +17,6 @@ const initialLigne = {
   prix_unitaire: 0.00
 };
 
-// FORM DATA INITIALE CORRECTE
 const initialFormData = {
   id_patient: '',
   id_medecin: '',
@@ -32,7 +30,7 @@ const initialFormData = {
   urgence: false,
   notes: '',
   created_by: 1,
-  medicaments: [{ ...initialLigne }], // CORRIGÉ : 'medicaments' au lieu de 'lignes'
+  medicaments: [{ ...initialLigne }], 
 };
 
 const OrdonnanceForm = ({ show, onHide, ordonnance, onSubmit, loading }) => {
@@ -43,7 +41,7 @@ const OrdonnanceForm = ({ show, onHide, ordonnance, onSubmit, loading }) => {
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
 
-  // Charger patients, médecins et médicaments
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -62,7 +60,6 @@ const OrdonnanceForm = ({ show, onHide, ordonnance, onSubmit, loading }) => {
     fetchData();
   }, []);
 
-  // CORRECTION : Pré-remplir le formulaire pour édition
   useEffect(() => {
     if (show) {
       if (ordonnance) {
@@ -83,7 +80,6 @@ const OrdonnanceForm = ({ show, onHide, ordonnance, onSubmit, loading }) => {
           urgence: ordonnance.urgence || false,
           notes: ordonnance.notes || '',
           created_by: ordonnance.created_by || 1,
-          // CORRECTION CRITIQUE : Utiliser 'medicaments' au lieu de 'lignes'
           medicaments: ordonnance.medicaments && Array.isArray(ordonnance.medicaments) && ordonnance.medicaments.length > 0 ? 
             ordonnance.medicaments.map(med => ({
               ...initialLigne,
@@ -101,14 +97,12 @@ const OrdonnanceForm = ({ show, onHide, ordonnance, onSubmit, loading }) => {
             [{ ...initialLigne }],
         });
       } else {
-        // CORRECTION : Reset complet pour nouvelle ordonnance
         setFormData(initialFormData);
       }
       setErrors({});
     }
   }, [ordonnance, show]);
 
-  // CORRECTION : Reset quand le modal se ferme
   useEffect(() => {
     if (!show) {
       setFormData(initialFormData);
@@ -116,7 +110,6 @@ const OrdonnanceForm = ({ show, onHide, ordonnance, onSubmit, loading }) => {
     }
   }, [show]);
 
-  // Gestion champs principaux
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({ 
@@ -126,7 +119,6 @@ const OrdonnanceForm = ({ show, onHide, ordonnance, onSubmit, loading }) => {
     if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
-  // Gestion des médicaments
   const handleMedicamentChange = (index, e) => {
     const { name, value, type, checked } = e.target;
     
@@ -134,7 +126,6 @@ const OrdonnanceForm = ({ show, onHide, ordonnance, onSubmit, loading }) => {
       const medicaments = [...prev.medicaments];
       
       if (name === 'id_medicament') {
-        // CORRECTION : Récupérer automatiquement le prix et les infos du médicament sélectionné
         const medicamentSelectionne = medicaments.find(med => med.id_medicament === parseInt(value));
         if (!medicamentSelectionne) {
           const medicamentInfo = medicaments.find(med => med.id_medicament === parseInt(value));
@@ -142,7 +133,7 @@ const OrdonnanceForm = ({ show, onHide, ordonnance, onSubmit, loading }) => {
             medicaments[index] = { 
               ...medicaments[index], 
               [name]: value,
-              prix_unitaire: medicamentInfo.prix_unitaire || 0.00 // Prix automatique
+              prix_unitaire: medicamentInfo.prix_unitaire || 0.00 
             };
           } else {
             medicaments[index] = { ...medicaments[index], [name]: value };
@@ -158,14 +149,12 @@ const OrdonnanceForm = ({ show, onHide, ordonnance, onSubmit, loading }) => {
       return { ...prev, medicaments };
     });
 
-    // Effacer l'erreur spécifique à ce champ
     const errorKey = `medicament_${index}_${name}`;
     if (errors[errorKey]) {
       setErrors(prev => ({ ...prev, [errorKey]: '' }));
     }
   };
 
-  // NOUVELLE FONCTION : Récupérer les infos d'un médicament par son ID
   const getMedicamentInfo = (id_medicament) => {
     return medicaments.find(med => med.id_medicament === parseInt(id_medicament));
   };
@@ -184,7 +173,6 @@ const OrdonnanceForm = ({ show, onHide, ordonnance, onSubmit, loading }) => {
     }));
   };
 
-  // Validation simple
   const validateForm = () => {
     const newErrors = {};
     
@@ -192,7 +180,6 @@ const OrdonnanceForm = ({ show, onHide, ordonnance, onSubmit, loading }) => {
     if (!formData.id_medecin) newErrors.id_medecin = 'Le médecin est requis';
     if (!formData.date_prescription) newErrors.date_prescription = 'La date de prescription est requise';
 
-    // Validation des médicaments
     formData.medicaments.forEach((medicament, idx) => {
       if (!medicament.id_medicament) {
         newErrors[`medicament_${idx}_id_medicament`] = 'Sélectionner un médicament';
@@ -212,13 +199,10 @@ const OrdonnanceForm = ({ show, onHide, ordonnance, onSubmit, loading }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      // CORRECTION : S'assurer que les données sont bien formatées avec 'medicaments'
       const dataToSubmit = {
         ...formData,
-        // Convertir les nombres
         nb_renouvellements_autorises: parseInt(formData.nb_renouvellements_autorises) || 0,
         duree_validite: parseInt(formData.duree_validite) || 30,
-        // Formater les médicaments
         medicaments: formData.medicaments.map(medicament => ({
           ...medicament,
           quantite_prescrite: parseInt(medicament.quantite_prescrite) || 0,
@@ -646,7 +630,7 @@ const OrdonnanceForm = ({ show, onHide, ordonnance, onSubmit, loading }) => {
                           name="prix_unitaire"
                           value={medicament.prix_unitaire}
                           onChange={(e) => handleMedicamentChange(index, e)}
-                          readOnly // CORRECTION : Prix en lecture seule
+                          readOnly 
                           style={{fontSize :'18px'}}
                         /></div>
                       </Form.Group>

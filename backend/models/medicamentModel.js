@@ -2,7 +2,7 @@
 const db = require('../config/db');
 
 const MedicamentModel = {
-  //  Récupérer tous les médicaments
+
   getAll: async () => {
     try {
       const [rows] = await db.execute(`
@@ -16,7 +16,6 @@ const MedicamentModel = {
     }
   },
 
-  //  Récupérer un médicament par ID
   getById: async (id) => {
     try {
       const [rows] = await db.execute('SELECT * FROM medicament WHERE id_medicament = ?', [id]);
@@ -27,7 +26,6 @@ const MedicamentModel = {
     }
   },
 
-  //  Créer un nouveau médicament
   create: async (data) => {
     try {
       console.log('🔍 MedicamentModel.create - Données reçues:', data);
@@ -74,7 +72,6 @@ const MedicamentModel = {
     }
   },
 
-  //  Mettre à jour un médicament existant
   update: async (id, data) => {
     try {
       console.log(' MedicamentModel.update - ID:', id, 'Données:', data);
@@ -123,7 +120,6 @@ const MedicamentModel = {
     }
   },
 
-  //  Supprimer un médicament
   delete: async (id) => {
     try {
       const [result] = await db.execute('DELETE FROM medicament WHERE id_medicament = ?', [id]);
@@ -135,7 +131,6 @@ const MedicamentModel = {
     }
   },
 
-  //  Recherche (par nom commercial, principe actif, dosage OU classe thérapeutique)
   search: async (query) => {
     try {
       const q = `%${query}%`;
@@ -154,7 +149,6 @@ const MedicamentModel = {
     }
   },
 
-  //  Vérifier les doublons (même nom_commercial et dosage)
   checkDuplicate: async (nom_commercial, dosage, excludeId = null) => {
     try {
       let query = `SELECT COUNT(*) AS count 
@@ -175,7 +169,6 @@ const MedicamentModel = {
     }
   },
 
-  //  NOUVELLE MÉTHODE: Récupérer les médicaments avec stock critique
   getStockCritique: async () => {
     try {
       const [rows] = await db.execute(
@@ -190,7 +183,6 @@ const MedicamentModel = {
     }
   },
 
-  //  NOUVELLE MÉTHODE: Récupérer les médicaments par classe thérapeutique
   getByClasseTherapeutique: async (classe) => {
     try {
       const [rows] = await db.execute(
@@ -205,8 +197,7 @@ const MedicamentModel = {
       throw error;
     }
   },
-
-  //  NOUVELLE MÉTHODE: Mettre à jour le stock
+  
   updateStock: async (id, nouveauStock) => {
     try {
       const [result] = await db.execute(

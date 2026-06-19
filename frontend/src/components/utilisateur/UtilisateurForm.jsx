@@ -14,9 +14,6 @@ const UtilisateurForm = ({ show, onHide, user, onSuccess }) => {
 
   const [medecins, setMedecins] = useState([]);
 
-  /* =========================
-     INIT FORM
-  ========================= */
   useEffect(() => {
     if (user) {
       setEmail(user.email || '');
@@ -33,23 +30,16 @@ const UtilisateurForm = ({ show, onHide, user, onSuccess }) => {
     }
   }, [user]);
 
-  /* =========================
-     CHARGER MEDECINS
-  ========================= */
   useEffect(() => {
     medecinService.getAll()
       .then(setMedecins)
       .catch(err => console.error('Erreur chargement médecins:', err));
   }, []);
 
-  /* =========================
-     SUBMIT
-  ========================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    // Préparer le payload
     const payload = {
       email,
       role,
@@ -63,7 +53,6 @@ const UtilisateurForm = ({ show, onHide, user, onSuccess }) => {
     if (motDePasse.trim()) {
       payload.mot_de_passe = motDePasse;
     } else if (!user) {
-      // Création: mot de passe obligatoire
       alert("Le mot de passe est obligatoire pour créer un utilisateur");
       setLoading(false);
       return;
@@ -143,8 +132,7 @@ const UtilisateurForm = ({ show, onHide, user, onSuccess }) => {
               <option value="pharmacien">Pharmacien</option>
             </Form.Select>
           </Form.Group>
-
-          {/* MÉDECIN (si rôle = medecin) */}
+          
           {role === 'medecin' && (
             <Form.Group className="mb-3">
               <Form.Label>Médecin</Form.Label>

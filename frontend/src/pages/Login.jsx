@@ -1,4 +1,3 @@
-// src/pages/Login.jsx
 import React, { useState } from 'react';
 import { Container, Row, Col, Card, Form, Button, Spinner } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext';

@@ -65,11 +65,7 @@ const PatientForm = ({ show, onHide, patient, onSubmit, loading }) => {
     if (!formData.prenom.trim()) newErrors.prenom = 'Le prénom est requis';
     if (!formData.date_naissance) newErrors.date_naissance = 'La date de naissance est requise';
     if (!formData.sexe) newErrors.sexe = 'Le sexe est requis';
-    
-    //  MODIFICATION: Adresse obligatoire pour tous
     if (!formData.adresse.trim()) newErrors.adresse = "L'adresse est requise";
-
-    // Email et téléphone OBLIGATOIRES pour les employés
     if (formData.type_patient === 'employe') {
       if (!formData.telephone.trim()) newErrors.telephone = 'Le téléphone est requis pour les employés';
       if (!formData.email.trim()) newErrors.email = "L'email est requis pour les employés";
@@ -78,7 +74,6 @@ const PatientForm = ({ show, onHide, patient, onSubmit, loading }) => {
       }
     }
 
-    // Email et téléphone OPTIONNELS pour les membres de famille
     if (formData.type_patient === 'famille') {
       if (formData.email && formData.email.trim() !== '' && !/\S+@\S+\.\S+/.test(formData.email)) {
         newErrors.email = 'Email invalide';
@@ -241,7 +236,6 @@ const PatientForm = ({ show, onHide, patient, onSubmit, loading }) => {
             </Row>
 
             <Form.Group className="mb-3">
-              {/*  MODIFICATION: Adresse obligatoire pour tous */}
               <Form.Label>Adresse </Form.Label>
               <Form.Control
                 as="textarea"

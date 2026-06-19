@@ -16,7 +16,6 @@ import {
 const MedicamentDetails = ({ show, onHide, medicament }) => {
   if (!medicament) return null;
 
-  // Fonction pour déterminer le badge de stock
   const getStockBadge = () => {
     if (medicament.stock_actuel <= 0) {
       return <Badge bg="danger" className="fs-6 d-flex align-items-center gap-1"><BsExclamationTriangle /> Rupture de stock</Badge>;
@@ -27,7 +26,6 @@ const MedicamentDetails = ({ show, onHide, medicament }) => {
     }
   };
 
-  // Fonction pour le badge prescription
   const getPrescriptionBadge = () => {
     return medicament.prescription_restreinte 
       ? <Badge  className="fs-6 d-flex align-items-center gap-1"> <p>Ordonnance requise</p></Badge>

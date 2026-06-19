@@ -1,15 +1,12 @@
 const LigneOrdonnanceModel = require('../models/ligneOrdonnanceModel');
 
 class LigneOrdonnanceController {
-  // Créer une nouvelle ligne d'ordonnance
   async create(req, res) {
     try {
       console.log('POST /api/ligne-ordonnance - Début');
       console.log('Données reçues:', req.body);
 
       const { id_ordonnance, id_medicament, quantite_prescrite } = req.body;
-
-      // Validation des champs obligatoires
       if (!id_ordonnance || !id_medicament || !quantite_prescrite) {
         return res.status(400).json({
           success: false,
@@ -17,7 +14,6 @@ class LigneOrdonnanceController {
         });
       }
 
-      // Validation de la quantité
       if (quantite_prescrite <= 0) {
         return res.status(400).json({
           success: false,
@@ -42,7 +38,6 @@ class LigneOrdonnanceController {
     }
   }
 
-  // Obtenir une ligne d'ordonnance par ID
   async getById(req, res) {
     try {
       const id = req.params.id;
@@ -78,7 +73,6 @@ class LigneOrdonnanceController {
     }
   }
 
-  // Obtenir toutes les lignes d'ordonnance
   async getAll(req, res) {
     try {
       const lignes = await LigneOrdonnanceModel.getAll();
@@ -99,7 +93,6 @@ class LigneOrdonnanceController {
     }
   }
 
-  // Obtenir les lignes par ID d'ordonnance
   async getByOrdonnanceId(req, res) {
     try {
       const id_ordonnance = req.params.id_ordonnance;
@@ -129,7 +122,6 @@ class LigneOrdonnanceController {
     }
   }
 
-  // Mettre à jour une ligne d'ordonnance
   async update(req, res) {
     try {
       const id = req.params.id;
@@ -165,7 +157,6 @@ class LigneOrdonnanceController {
     }
   }
 
-  // Mettre à jour le statut d'une ligne
   async updateStatut(req, res) {
     try {
       const id = req.params.id;
@@ -222,7 +213,6 @@ class LigneOrdonnanceController {
     }
   }
 
-  // Mettre à jour la quantité délivrée
   async updateQuantiteDelivree(req, res) {
     try {
       const id = req.params.id;
@@ -277,7 +267,6 @@ class LigneOrdonnanceController {
     }
   }
 
-  // Supprimer une ligne d'ordonnance
   async delete(req, res) {
     try {
       const id = req.params.id;
@@ -312,7 +301,6 @@ class LigneOrdonnanceController {
     }
   }
 
-  // Supprimer toutes les lignes d'une ordonnance spécifique
   async deleteByOrdonnance(req, res) {
     try {
       const id_ordonnance = req.params.id_ordonnance;
@@ -342,7 +330,6 @@ class LigneOrdonnanceController {
     }
   }
 
-  // NOUVEAU: Obtenir les lignes par statut
   async getByStatut(req, res) {
     try {
       const { statut } = req.params;
@@ -373,7 +360,6 @@ class LigneOrdonnanceController {
     }
   }
 
-  // NOUVEAU: Obtenir les lignes en attente de délivrance
   async getEnAttenteDelivrance(req, res) {
     try {
       const lignes = await LigneOrdonnanceModel.getEnAttenteDelivrance();
@@ -394,7 +380,6 @@ class LigneOrdonnanceController {
     }
   }
 
-  // NOUVEAU: Vérifier le stock pour une ligne
   async verifierStock(req, res) {
     try {
       const id = req.params.id;
@@ -429,8 +414,7 @@ class LigneOrdonnanceController {
       });
     }
   }
-
-  // NOUVEAU: Calculer le total d'une ordonnance
+  
   async getTotalOrdonnance(req, res) {
     try {
       const id_ordonnance = req.params.id_ordonnance;

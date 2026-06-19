@@ -1,4 +1,3 @@
-// controllers/dashboardController.js
 const PatientModel = require('../models/patientModel');
 const MedecinModel = require('../models/medecinModel');
 const RendezVousModel = require('../models/rendezVousModel');
@@ -7,7 +6,6 @@ const OrdonnanceModel = require('../models/ordonnanceModel');
 class DashboardController {
   async getStats(req, res) {
     try {
-      console.log('GET /api/dashboard/stats - Début');
       const stats = await RendezVousModel.getDashboardStats();
       
       const [
@@ -22,7 +20,6 @@ class DashboardController {
         MedecinModel.countMedecinsActifs ? MedecinModel.countMedecinsActifs() : 0
       ]);
 
-      console.log('Statistiques calculées avec succès');
 
       res.json({
         success: true,
@@ -36,8 +33,8 @@ class DashboardController {
           medecinsActifs: medecinsActifs || 0,
           occupations: stats.occupations || 0,
           cetteSemaine: stats.cette_semaine || 0,
-          patientsMois: 12, // Pourcentage simulé
-          ordoSemaine: 8    // Pourcentage simulé
+          patientsMois: 12, 
+          ordoSemaine: 8    
         }
       });
 
@@ -51,7 +48,6 @@ class DashboardController {
     }
   }
 
-  // Obtenir les rendez-vous du jour
   async getTodayAppointments(req, res) {
     try {
       console.log('GET /api/dashboard/rendezvous/aujourdhui - Début');
@@ -77,12 +73,10 @@ class DashboardController {
     }
   }
 
-  // Obtenir les ordonnances récentes
   async getRecentPrescriptions(req, res) {
     try {
       console.log('GET /api/dashboard/ordonnances/recentes - Début');
 
-      // Utiliser getRecentOrdonnances si disponible, sinon tableau vide
       let prescriptions = [];
       if (OrdonnanceModel.getRecentOrdonnances) {
         prescriptions = await OrdonnanceModel.getRecentOrdonnances(5);

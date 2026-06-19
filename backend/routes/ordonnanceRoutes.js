@@ -1,4 +1,3 @@
-// routes/ordonnanceRoutes.js
 const express = require('express');
 const router = express.Router();
 const OrdonnanceController = require('../controllers/ordonnanceController');

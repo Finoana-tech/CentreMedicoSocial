@@ -1,4 +1,3 @@
-// src/components/rendez_vous/RendezVousStats.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Container,
@@ -35,13 +34,11 @@ const RendezVousStats = () => {
   const [error, setError] = useState('');
   const [userRole, setUserRole] = useState('assistant');
 
-  // Charger le rôle utilisateur
   useEffect(() => {
     const role = localStorage.getItem('userRole') || 'assistant';
     setUserRole(role);
   }, []);
 
-  // Charger les statistiques détaillées
   const loadStats = useCallback(async () => {
     setStatsLoading(true);
     setError('');
@@ -51,7 +48,6 @@ const RendezVousStats = () => {
     } catch (error) {
       console.error('Erreur chargement statistiques:', error);
       setError('Impossible de charger les statistiques. Veuillez réessayer.');
-      // Statistiques par défaut
       setStats({
         aujourdhui: 0,
         en_attente: 0,
@@ -63,7 +59,6 @@ const RendezVousStats = () => {
     }
   }, []);
 
-  // Charger au montage du composant
   useEffect(() => {
     loadStats();
   }, [loadStats]);
@@ -95,7 +90,6 @@ const RendezVousStats = () => {
     );
   }
 
-  // Cartes de statistiques adaptées aux nouveaux statuts
   const statCards = [
     {
       title: "Aujourd'hui",

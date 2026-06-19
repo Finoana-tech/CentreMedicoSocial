@@ -1,8 +1,6 @@
-// models/OrdonnanceModel.js
 const db = require('../config/db');
 
 const OrdonnanceModel = {
-  // 🟢 Récupérer toutes les ordonnances avec patient, médecin et aperçu des médicaments
   getAll: async () => {
     try {
       const [rows] = await db.execute(`
@@ -41,7 +39,6 @@ const OrdonnanceModel = {
     }
   },
 
-  // 🟢 CORRIGÉ : Récupérer une ordonnance complète pour MODIFICATION
   getById: async (id) => {
     try {
       const [ord] = await db.execute(
@@ -80,7 +77,6 @@ const OrdonnanceModel = {
         WHERE lo.id_ordonnance = ?
       `, [id]);
 
-      // CORRECTION : Ajout du champ 'medicaments' pour le frontend
       return {
         ...ordonnance,
         medicaments: lignes.map(ligne => ({
@@ -108,7 +104,6 @@ const OrdonnanceModel = {
     }
   },
 
-  // 🟢 CORRIGÉ : Récupérer les détails complets pour AFFICHAGE (sans p.genre)
   getDetailsById: async (id) => {
     try {
       const [results] = await db.execute(`
@@ -149,7 +144,6 @@ const OrdonnanceModel = {
           nom: results[0].patient_nom,
           prenom: results[0].patient_prenom,
           date_naissance: results[0].date_naissance
-          // Retirer genre car la colonne n'existe pas dans la table
         },
         medecin: {
           id_medecin: results[0].id_medecin,
@@ -184,7 +178,6 @@ const OrdonnanceModel = {
     }
   },
 
-  // 🟢 Créer une ordonnance avec ses lignes
   create: async (data) => {
     const connection = await db.getConnection();
     try {
@@ -243,7 +236,6 @@ const OrdonnanceModel = {
     }
   },
 
-  // 🟢 Mise à jour d'une ordonnance
   update: async (id, data) => {
     try {
       const { 
@@ -271,7 +263,6 @@ const OrdonnanceModel = {
     }
   },
 
-  // 🟢 Suppression d'une ordonnance et ses lignes associées
   delete: async (id) => {
     const connection = await db.getConnection();
     try {
@@ -289,7 +280,6 @@ const OrdonnanceModel = {
     }
   },
 
-  // 🟢 Recherche améliorée
   search: async (query) => {
     try {
       const q = `%${query}%`;
@@ -328,7 +318,6 @@ const OrdonnanceModel = {
     }
   },
 
-  // === Workflow ordonnances ===
   valider: async (id_ordonnance, validated_by) => {
     try {
       const [result] = await db.execute(
@@ -416,7 +405,6 @@ const OrdonnanceModel = {
     }
   },
 
-  // === Dashboard & stats ===
   countOrdonnancesThisMonth: async () => {
     try {
       const [rows] = await db.execute(`
@@ -505,7 +493,6 @@ const OrdonnanceModel = {
     }
   },
 
-  // === Renouvellement complet ===
   getRenouvellementsRestants: async (id_ordonnance) => {
     try {
       const [rows] = await db.execute(

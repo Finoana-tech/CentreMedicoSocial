@@ -73,7 +73,7 @@ const MedicamentForm = ({ show, onHide, medicament, onSubmit, loading }) => {
       <Form onSubmit={handleSubmit}>
         <Modal.Body>
           <Card className="p-3 shadow-sm">
-            {/* Section Informations de base - inchangée */}
+           
             <Row className="mb-3">
               <Col md={12}>
                 <Form.Group>
@@ -119,7 +119,6 @@ const MedicamentForm = ({ show, onHide, medicament, onSubmit, loading }) => {
               </Col>
             </Row>
 
-            {/* NOUVELLE SECTION : Informations médicales */}
             <Row className="mb-3">
               <Col md={6}>
                 <Form.Group>
@@ -155,7 +154,6 @@ const MedicamentForm = ({ show, onHide, medicament, onSubmit, loading }) => {
               </Col>
             </Row>
 
-            {/* NOUVELLE SECTION : Gestion de stock */}
             <Row className="mb-3">
               <Col md={4}>
                 <Form.Group>
@@ -198,7 +196,6 @@ const MedicamentForm = ({ show, onHide, medicament, onSubmit, loading }) => {
               </Col>
             </Row>
 
-            {/* NOUVELLE SECTION : Conservation et posologie */}
             <Row className="mb-3">
               <Col md={6}>
                 <Form.Group>

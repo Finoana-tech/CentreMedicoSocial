@@ -1,24 +1,15 @@
 import { RENDEZ_VOUS_STATUS, PATIENT_SEXE } from './constants';
 
-/**
- * Format une date au format français
- */
 export const formatDate = (dateString) => {
   if (!dateString) return '-';
   return new Date(dateString).toLocaleDateString('fr-FR');
 };
 
-/**
- * Format une date et heure au format français
- */
 export const formatDateTime = (dateTimeString) => {
   if (!dateTimeString) return '-';
   return new Date(dateTimeString).toLocaleString('fr-FR');
 };
 
-/**
- * Retourne la classe Bootstrap pour le statut d'un rendez-vous
- */
 export const getStatusBadgeClass = (status) => {
   switch (status) {
     case RENDEZ_VOUS_STATUS.PLANIFIE:
@@ -32,16 +23,10 @@ export const getStatusBadgeClass = (status) => {
   }
 };
 
-/**
- * Retourne le libellé du sexe
- */
 export const getSexeLabel = (sexe) => {
   return sexe === PATIENT_SEXE.M ? 'Masculin' : 'Féminin';
 };
 
-/**
- * Fonction de debounce pour les recherches
- */
 export const debounce = (func, wait) => {
   let timeout;
   return function executedFunction(...args) {
@@ -54,9 +39,6 @@ export const debounce = (func, wait) => {
   };
 };
 
-/**
- * Calcule l'âge à partir de la date de naissance
- */
 export const calculateAge = (dateNaissance) => {
   if (!dateNaissance) return null;
   const today = new Date();
@@ -71,17 +53,11 @@ export const calculateAge = (dateNaissance) => {
   return age;
 };
 
-/**
- * Valide un email
- */
 export const validateEmail = (email) => {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(email);
 };
 
-/**
- * Valide un numéro de téléphone
- */
 export const validatePhone = (phone) => {
   const re = /^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,4}[-\s.]?[0-9]{1,9}$/;
   return re.test(phone.replace(/\s/g, ''));

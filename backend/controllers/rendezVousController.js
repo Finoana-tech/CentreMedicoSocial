@@ -1,4 +1,3 @@
-// controllers/RendezVousController.js
 const RendezVousModel = require('../models/rendezVousModel');
 
 class RendezVousController {
@@ -323,7 +322,7 @@ async checkAvailability(req, res) {
     }
 
     const availability = await RendezVousModel.checkAvailability(
-      medecinId, // Utiliser l'ID converti
+      medecinId, 
       date_heure, 
       duree || 30,
       excludeRdvId || null
@@ -345,7 +344,6 @@ async checkAvailability(req, res) {
   }
 }
 
-  // SUPPRIMÉ : getAvailableSlots - Plus de génération de créneaux
   async getAvailableSlots(req, res) {
     try {
       return res.status(410).json({
@@ -409,7 +407,6 @@ async checkAvailability(req, res) {
     }
   }
 
-  // NOUVELLE MÉTHODE : Vérification rapide de disponibilité (pour le frontend)
   async quickCheck(req, res) {
     try {
       const { id_medecin, date, heure } = req.query;
@@ -423,13 +420,12 @@ async checkAvailability(req, res) {
         });
       }
 
-      // Formater la date_heure complète
       const date_heure = `${date}T${heure}:00`;
       
       const availability = await RendezVousModel.checkAvailability(
         id_medecin, 
         date_heure, 
-        30, // Durée par défaut
+        30, 
         null
       );
 
@@ -453,7 +449,6 @@ async checkAvailability(req, res) {
     }
   }
 
-  // SUPPRIMÉES : Méthodes obsolètes
   async declarerOccupation(req, res) {
     return res.status(410).json({
       success: false,

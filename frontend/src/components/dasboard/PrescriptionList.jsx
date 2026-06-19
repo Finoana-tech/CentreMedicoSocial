@@ -1,4 +1,3 @@
-// src/components/dashboard/PrescriptionList.jsx
 import React from 'react';
 import { Card, ListGroup, Badge } from 'react-bootstrap';
 import { BsFileText, BsPerson, BsCalendar } from 'react-icons/bs';

@@ -1,4 +1,3 @@
-// models/RendezVousModel.js
 const db = require('../config/db');
 
 const RendezVousModel = {
@@ -91,20 +90,18 @@ const RendezVousModel = {
         statut: data.statut || 'planifie',
         duree: data.duree || 30
       };
-
-      // Vérifier la disponibilité complète avant création
+      
       const disponibilite = await RendezVousModel.verifierDisponibiliteComplete(
         cleanedData.id_medecin, 
         cleanedData.date_heure, 
         cleanedData.duree,
-        null // Pas d'ID à exclure pour une création
+        null 
       );
 
       if (!disponibilite.disponible) {
         throw new Error(disponibilite.raison);
       }
 
-      // Créer le rendez-vous
       const [result] = await connection.execute(
         `INSERT INTO rendez_vous 
          (id_patient, id_medecin, date_heure, motif, statut, duree)
@@ -119,7 +116,6 @@ const RendezVousModel = {
         ]
       );
 
-      // Mettre à jour la disponibilité du médecin seulement si c'est un RDV imminent
       const maintenant = new Date();
       const dateRdv = new Date(cleanedData.date_heure);
       
@@ -151,7 +147,6 @@ const RendezVousModel = {
 
       console.log('RendezVousModel.update - ID:', id, 'Données:', data);
 
-      // Récupérer l'ancien rendez-vous
       const [ancienRdv] = await connection.execute(
         'SELECT * FROM rendez_vous WHERE id_rendez_vous = ?',
         [id]
@@ -171,13 +166,12 @@ const RendezVousModel = {
         duree: data.duree || ancienData.duree
       };
 
-      // Si le médecin ou la date change, vérifier la disponibilité
       if (data.id_medecin || data.date_heure) {
         const disponibilite = await RendezVousModel.verifierDisponibiliteComplete(
           cleanedData.id_medecin, 
           cleanedData.date_heure, 
           cleanedData.duree,
-          id // Exclure le RDV actuel en mode édition
+          id 
         );
 
         if (!disponibilite.disponible) {
@@ -185,7 +179,6 @@ const RendezVousModel = {
         }
       }
 
-      // Mettre à jour le rendez-vous
       const [result] = await connection.execute(
         `UPDATE rendez_vous 
          SET id_patient=?, id_medecin=?, date_heure=?, motif=?, statut=?, duree=?
@@ -201,7 +194,6 @@ const RendezVousModel = {
         ]
       );
 
-      // Gérer la disponibilité automatique seulement pour les statuts de RDV
       if (cleanedData.statut === 'en_cours' || cleanedData.statut === 'termine' || cleanedData.statut === 'annule') {
         await RendezVousModel.gestionDisponibiliteAutomatique(
           cleanedData.id_medecin, 
@@ -230,7 +222,6 @@ const RendezVousModel = {
     try {
       await connection.beginTransaction();
 
-      // Récupérer les infos du rendez-vous avant suppression
       const [rdv] = await connection.execute(
         'SELECT id_medecin, statut FROM rendez_vous WHERE id_rendez_vous = ?',
         [id]
@@ -241,7 +232,6 @@ const RendezVousModel = {
         [id]
       );
 
-      // Libérer le médecin seulement si le statut était automatique
       if (rdv.length > 0 && rdv[0].statut === 'en_cours') {
         await connection.execute(
           'UPDATE medecin SET disponibilite = "disponible" WHERE id_medecin = ? AND disponibilite = "en_consultation"',
@@ -275,7 +265,6 @@ const RendezVousModel = {
         [raison, id]
       );
 
-      // Libérer le médecin seulement si le statut était automatique
       const [rdv] = await connection.execute(
         'SELECT id_medecin, statut FROM rendez_vous WHERE id_rendez_vous = ?',
         [id]
@@ -388,7 +377,6 @@ const RendezVousModel = {
         };
       }
 
-      // Vérifier que le rendez-vous ne chevauche pas la pause déjeuner
       const chevauchePause = (startTime < morningEnd && endTime > afternoonStart);
       if (chevauchePause) {
         return { 
@@ -409,8 +397,6 @@ const RendezVousModel = {
 
   gestionDisponibiliteAutomatique: async (id_medecin, date_heure, statut, connection) => {
     try {
-      // Ne gère que les disponibilités automatiques (en_consultation)
-      // Ne modifie pas les statuts manuels (pause, chirurgie, hors_service)
       
       if (statut === 'en_cours') {
         await connection.execute(
@@ -429,10 +415,9 @@ const RendezVousModel = {
     }
   },
 
-  // models/RendezVousModel.js - VérifierDisponibiliteComplete (section corrigée)
 verifierDisponibiliteComplete: async (id_medecin, date_heure, duree = 30, excludeRdvId = null) => {
   try {
-    // 1. Vérifier que l'ID médecin est valide - CORRECTION
+
     let medecinId;
     try {
       medecinId = parseInt(id_medecin);
@@ -445,10 +430,9 @@ verifierDisponibiliteComplete: async (id_medecin, date_heure, duree = 30, exclud
       return { disponible: false, raison: 'ID du médecin invalide' };
     }
 
-    // 2. Vérifier la disponibilité manuelle (admin)
     const [medecin] = await db.execute(
       'SELECT disponibilite, nom, prenom FROM medecin WHERE id_medecin = ?',
-      [medecinId] // Utiliser medecinId converti
+      [medecinId] 
     );
 
     if (medecin.length === 0) {
@@ -458,7 +442,6 @@ verifierDisponibiliteComplete: async (id_medecin, date_heure, duree = 30, exclud
     const disponibiliteManuelle = medecin[0].disponibilite;
     const nomMedecin = `Dr ${medecin[0].prenom} ${medecin[0].nom}`;
     
-    // Messages d'erreur spécifiques selon le statut de disponibilité
     if (disponibiliteManuelle !== 'disponible' && disponibiliteManuelle !== 'en_consultation') {
       let message = '';
       switch(disponibiliteManuelle) {
@@ -483,13 +466,11 @@ verifierDisponibiliteComplete: async (id_medecin, date_heure, duree = 30, exclud
       return { disponible: false, raison: message };
     }
 
-    // 3. Vérifier les horaires de travail
     const horaireValide = await RendezVousModel.verifierHoraireTravail(date_heure, duree);
     if (!horaireValide.valide) {
       return { disponible: false, raison: horaireValide.raison };
     }
 
-    // 4. Vérifier les conflits de rendez-vous avec plus de détails
     const conflit = await RendezVousModel.checkDuplicate(medecinId, date_heure, duree, excludeRdvId);
     if (conflit.hasConflict) {
       return { 
@@ -554,9 +535,6 @@ verifierDisponibiliteComplete: async (id_medecin, date_heure, duree = 30, exclud
     }
   },
 
-  // SUPPRIMÉ : getAvailableSlots - Plus besoin de générer des créneaux
-
-  // NOUVELLE MÉTHODE : Vérification simple de disponibilité pour le frontend
   checkAvailability: async (id_medecin, date_heure, duree = 30, excludeRdvId = null) => {
     try {
       return await RendezVousModel.verifierDisponibiliteComplete(

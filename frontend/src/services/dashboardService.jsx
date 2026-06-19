@@ -1,4 +1,3 @@
-// src/services/dashboardService.js
 import { apiService } from './api';
 
 class DashboardService {

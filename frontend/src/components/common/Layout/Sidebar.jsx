@@ -32,7 +32,6 @@ const Sidebar = () => {
     );
   };
 
-  // ⚡ Permissions par rôle
   const rolePermissions = {
     admin: ['dashboard','patients','medecins','rendez-vous','ordonnances','medicaments','utilisateurs'],
     medecin: ['dashboard','patients','rendez-vous','ordonnances'],
@@ -40,7 +39,7 @@ const Sidebar = () => {
     pharmacien: ['dashboard','ordonnances','medicaments'],
   };
 
-  if (!user) return null; // Pas d'utilisateur : Sidebar vide
+  if (!user) return null; 
 
   const allowed = rolePermissions[user.role] || [];
 

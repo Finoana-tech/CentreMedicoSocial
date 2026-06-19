@@ -1,4 +1,3 @@
-// hooks/useCrud.js
 import { useState, useEffect } from 'react';
 
 export const useCrud = (service, options = {}) => {
@@ -13,7 +12,7 @@ export const useCrud = (service, options = {}) => {
     setLoading(true);
     setError('');
     const result = await service.getAll();
-    setData(Array.isArray(result) ? result : []); // ⚡ Toujours un tableau
+    setData(Array.isArray(result) ? result : []); 
     setSearchResults(null);
   } catch (err) {
     setError('Erreur lors du chargement des données');
@@ -51,7 +50,7 @@ export const useCrud = (service, options = {}) => {
   const create = async (itemData) => {
     try {
       const result = await service.create(itemData);
-      await fetchAll(); // Recharger les données
+      await fetchAll(); 
       return result;
     } catch (err) {
       setError('Erreur lors de la création');
@@ -62,7 +61,7 @@ export const useCrud = (service, options = {}) => {
   const update = async (id, itemData) => {
     try {
       const result = await service.update(id, itemData);
-      await fetchAll(); // Recharger les données
+      await fetchAll(); 
       return result;
     } catch (err) {
       setError('Erreur lors de la mise à jour');
@@ -73,7 +72,7 @@ export const useCrud = (service, options = {}) => {
   const remove = async (id) => {
     try {
       await service.delete(id);
-      await fetchAll(); // Recharger les données
+      await fetchAll(); 
     } catch (err) {
       setError('Erreur lors de la suppression');
       throw err;

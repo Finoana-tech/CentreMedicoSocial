@@ -1,4 +1,3 @@
-// src/components/common/Layout/Navbar.jsx
 import React from 'react';
 import { Navbar as BsNavbar, Container, Nav, Button } from 'react-bootstrap';
 import { useAuth } from '../../../contexts/AuthContext'; 
@@ -17,12 +16,10 @@ const CustomNavbar = () => {
   return (
     <BsNavbar bg="white" variant="light" className="shadow-sm">
       <Container fluid>
-        {/* Partie gauche : titre */}
         <BsNavbar.Brand>
           <h4 className="mb-0 text-primary">Centre Médico-Social JIRAMA</h4>
         </BsNavbar.Brand>
 
-        {/* Partie droite : infos utilisateur + déconnexion */}
         <Nav className="ms-auto d-flex align-items-center">
           <span className="me-3 text-muted" style={{fontSize : '18px'}}>
             Bienvenue, <strong>{user?.role || user?.nom || user?.name || 'Utilisateur'}</strong>

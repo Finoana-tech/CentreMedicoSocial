@@ -1,4 +1,3 @@
-// src/components/medecin/MedecinForm.jsx
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Button, Row, Col } from 'react-bootstrap';
 import { BsEnvelope, BsPhone } from 'react-icons/bs';

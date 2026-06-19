@@ -36,7 +36,6 @@ class PatientService {
     return res.data || res;
   }
 
-  // ✅ NOUVELLE MÉTHODE À AJOUTER - Récupère les tuteurs potentiels
   async getTuteursPotentiels() {
     const res = await apiService.get('/api/patient/tuteurs/potentiels');
     return res.data || res;

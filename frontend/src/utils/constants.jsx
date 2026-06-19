@@ -1,4 +1,3 @@
-// Rôles utilisateurs
 export const USER_ROLES = {
   ADMIN: 'admin',
   MEDECIN: 'medecin',
@@ -6,26 +5,22 @@ export const USER_ROLES = {
   PHARMACIEN: 'pharmacien'
 };
 
-// Statuts des rendez-vous
 export const RENDEZ_VOUS_STATUS = {
   PLANIFIE: 'Planifié',
   TERMINE: 'Terminé',
   ANNULE: 'Annulé'
 };
 
-// Sexes des patients
 export const PATIENT_SEXE = {
   M: 'M',
   F: 'F'
 };
 
-// Liens familiaux
 export const LIENS_FAMILIAUX = {
   CONJOINT: 'Conjoint',
   ENFANT: 'Enfant'
 };
 
-// Routes accessibles par rôle
 export const ROLE_ROUTES = {
   admin: ['/dashboard', '/patients', '/medecins', '/rendezvous', '/ordonnances', '/medicaments', '/profile'],
   medecin: ['/dashboard', '/patients', '/rendezvous', '/ordonnances', '/profile'],
@@ -33,7 +28,6 @@ export const ROLE_ROUTES = {
   pharmacien: ['/dashboard', '/medicaments', '/ordonnances', '/profile']
 };
 
-// Couleurs du thème médical
 export const MEDICAL_COLORS = {
   primary: '#3498db',
   secondary: '#2c3e50',

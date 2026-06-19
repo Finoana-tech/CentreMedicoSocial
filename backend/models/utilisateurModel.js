@@ -1,9 +1,8 @@
-// models/utilisateurModel.js
 const db = require("../config/db");
 const bcrypt = require("bcryptjs");
 
 const UtilisateurModel = {
-  // 🔹 Créer un utilisateur
+
   async create(data) {
     try {
       if (data.role === "medecin" && data.id_medecin) {
@@ -49,7 +48,6 @@ const UtilisateurModel = {
     }
   },
 
-  // 🔹 Trouver un utilisateur par ID
   async findById(id) {
     try {
       const [rows] = await db.execute(
@@ -63,7 +61,6 @@ const UtilisateurModel = {
     }
   },
 
-  // 🔹 Lister tous les utilisateurs
   async findAll() {
     try {
       const [rows] = await db.execute(
@@ -76,8 +73,6 @@ const UtilisateurModel = {
       throw err;
     }
   },
-
-  // 🔹 Activer / désactiver un compte
   async toggleActif(id, actif) {
     try {
       await db.execute(
@@ -91,7 +86,6 @@ const UtilisateurModel = {
     }
   },
 
-  // 🔹 Mettre à jour le mot de passe
   async updatePassword(id, newPassword) {
     try {
       const hash = await bcrypt.hash(newPassword, 10);
@@ -106,7 +100,6 @@ const UtilisateurModel = {
     }
   },
 
-  // 🔹 Mettre à jour le profil utilisateur
   async update(id, data) {
     try {
       const fields = [];
@@ -156,7 +149,6 @@ const UtilisateurModel = {
     }
   },
 
-  // 🔹 Supprimer un utilisateur
   async delete(id) {
     try {
       await db.execute(
@@ -170,11 +162,6 @@ const UtilisateurModel = {
     }
   },
 
-  /* ==========================
-     🆕 Mot de passe oublié / réinitialisation
-  ========================== */
-
-  // Vérifier l'email et retourner succès (simulation d'envoi d'email)
   async requestPasswordReset(email) {
     try {
       const user = await this.findByEmail(email.toLowerCase().trim());
@@ -186,7 +173,6 @@ const UtilisateurModel = {
     }
   },
 
-  // Réinitialiser le mot de passe par email
   async resetPasswordByEmail(email, newPassword) {
     try {
       const user = await this.findByEmail(email.toLowerCase().trim());

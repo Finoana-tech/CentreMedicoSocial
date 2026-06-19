@@ -1,4 +1,3 @@
-// services/ligneOrdonnanceService.js
 import apiService from './api';
 
 class LigneOrdonnanceService {
@@ -48,7 +47,6 @@ class LigneOrdonnanceService {
     return apiService.get('/ligne_ordonnance/stats/status');
   }
 
-  // Fonctions spécifiques
   async getByOrdonnance(ordonnanceId) {
     return apiService.get(`/ligne_ordonnance/ordonnance/${ordonnanceId}`);
   }

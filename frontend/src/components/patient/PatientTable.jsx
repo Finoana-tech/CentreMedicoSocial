@@ -59,14 +59,12 @@ const PatientTable = ({ patients, onEdit, onDelete, onCreate, onView, onRefresh,
           <Button 
             variant="primary" 
             onClick={onCreate} 
-            //style={{ minWidth: '80px' }}
             >
             <BsPeople size={20}/> Nouveau Patient
           </Button>
         </Col>
       </Row>
 
-      {/* Tableau des Patients */}
       <Table striped bordered hover responsive className="align-middle">
         <thead className="table-light">
           <tr>
@@ -132,7 +130,6 @@ const PatientTable = ({ patients, onEdit, onDelete, onCreate, onView, onRefresh,
         </tbody>
       </Table>
 
-      {/* Résumé */}
       <div className="d-flex justify-content-between align-items-center mt-3">
         <small className="text-muted">
           {filteredPatients.length} patient(s) sur {patients.length} total

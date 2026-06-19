@@ -1,4 +1,3 @@
-// src/components/rendez_vous/RendezVousTable.jsx
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { 
   Table, 
@@ -18,11 +17,7 @@ import {
   BsEye, 
   BsPencil, 
   BsTrash, 
-  BsCalendar,
-  BsPlayCircle,
-  BsCheckCircle,
-  BsXCircleFill,
-  BsClock
+  BsCalendar
 } from 'react-icons/bs';
 
 const RendezVousTable = ({
@@ -199,10 +194,6 @@ const RendezVousTable = ({
 
         {/* Header style MedecinTable */}
         <div className="d-flex justify-content-between align-items-center mb-4">
-          {/*<h5 className="mb-0 fw-bold">
-            <BsCalendar className="me-2" />
-            Gestion des Rendez-Vous
-          </h5> */}
           <Button variant="primary" onClick={onCreate} disabled={shouldDisableActions} className="d-flex align-items-center gap-2">
             <BsCalendar /> Nouveau RDV
           </Button>

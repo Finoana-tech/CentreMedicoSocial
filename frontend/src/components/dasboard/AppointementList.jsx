@@ -1,4 +1,3 @@
-// src/components/dashboard/AppointmentList.jsx
 import React from 'react';
 import { Card, ListGroup, Badge } from 'react-bootstrap';
 import { BsCalendarEvent, BsPerson, BsClock } from 'react-icons/bs';

@@ -1,11 +1,8 @@
-// src/components/ordonnances/OrdonnanceDetails.jsx
 import React from 'react';
 import { Modal, Button, Row, Col, ListGroup, Badge, Card } from 'react-bootstrap';
 
 const OrdonnanceDetails = ({ show, onHide, ordonnance, onExportPDF }) => {
   if (!ordonnance) return null;
-
-  console.log('Données ordonnance reçues:', ordonnance); // DEBUG
 
   const formatDate = (dateString) => {
     if (!dateString) return '-';
@@ -17,7 +14,6 @@ const OrdonnanceDetails = ({ show, onHide, ordonnance, onExportPDF }) => {
     return new Date(dateString).toLocaleString('fr-FR');
   };
 
-  // Fonction pour déterminer le badge de statut
   const getStatutBadge = (statut) => {
     switch(statut) {
       case 'Validée':
@@ -53,26 +49,20 @@ const OrdonnanceDetails = ({ show, onHide, ordonnance, onExportPDF }) => {
     }
   };
 
-  // CORRECTION : S'assurer que medicaments est toujours un tableau
   const medicaments = Array.isArray(ordonnance.medicaments) ? ordonnance.medicaments : [];
   const patient = ordonnance.patient || {};
   const medecin = ordonnance.medecin || {};
-
-  // CORRECTION : Support des anciennes structures de données
   const patientNom = patient.nom || ordonnance.patient_nom || '';
   const patientPrenom = patient.prenom || ordonnance.patient_prenom || '';
   const medecinNom = medecin.nom || ordonnance.medecin_nom || '';
   const medecinPrenom = medecin.prenom || ordonnance.medecin_prenom || '';
 
-  // CORRECTION : Fonction pour fermer le modal
   const handleClose = () => {
-    console.log('Fermeture du modal demandée'); // DEBUG
     if (onHide) {
       onHide();
     }
   };
 
-  // Fonction pour gérer l'export PDF
   const handleExportPDF = () => {
     if (onExportPDF && ordonnance.id_ordonnance) {
       onExportPDF(ordonnance.id_ordonnance);
@@ -238,7 +228,7 @@ const OrdonnanceDetails = ({ show, onHide, ordonnance, onExportPDF }) => {
           </Col>
         </Row>
 
-        {/* Section Médicaments - CORRIGÉE */}
+        {/* Section Médicaments  */}
         <Row className="mt-3">
           <Col>
             <Card className="border shadow-sm">
@@ -271,10 +261,6 @@ const OrdonnanceDetails = ({ show, onHide, ordonnance, onExportPDF }) => {
                                     <small className="text-muted">Dosage: {medicament.dosage}</small>
                                   </div>
                                 )}
-                                {/* DEBUG: Afficher toutes les données du médicament */}
-                                <div style={{ display: 'none' }}>
-                                  <small>DEBUG: {JSON.stringify(medicament)}</small>
-                                </div>
                               </div>
                             </div>
                           </Col>
@@ -361,10 +347,6 @@ const OrdonnanceDetails = ({ show, onHide, ordonnance, onExportPDF }) => {
                       <i className="fs-1 text-muted"></i>
                       <p className="mt-2 mb-0">Aucun médicament prescrit</p>
                       <small>Cette ordonnance ne contient pas de médicaments</small>
-                      {/* DEBUG: Afficher pourquoi */}
-                      <div style={{ display: 'none' }}>
-                        <small>DEBUG: medicaments = {JSON.stringify(ordonnance.medicaments)}</small>
-                      </div>
                     </div>
                   </div>
                 )}

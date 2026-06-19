@@ -1,11 +1,9 @@
-// server.js
 const express = require('express');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 require('dotenv/config');
 
-// Import CommonJS des routes existantes
 const medecinRoutes = require('./routes/medecinRoutes');
 const patientRoutes = require('./routes/patientRoutes');
 const medicamentRoutes = require('./routes/medicamentRoutes');
@@ -20,9 +18,6 @@ const port = process.env.PORT || 5000;
 const host = process.env.HOST || 'localhost';
 
 
-//  MIDDLEWARES DE SECURITE - CORS MANUEL
-
-// CONFIGURATION CORS MANUELLE - CORRIGÉE
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
@@ -37,13 +32,11 @@ app.use((req, res, next) => {
   next();
 });
 
-// Helmet - DÉSACTIVER LES POLITIQUES QUI BLOQUENT LES PDF
 app.use(helmet({
   crossOriginResourcePolicy: false,
   crossOriginEmbedderPolicy: false
 }));
 
-// Rate limiting pour prevenir les attaques brute force
 const limiter = rateLimit({
   windowMs: 1 * 60 * 1000,
   max: 100,
@@ -54,27 +47,15 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// =============================================
-//  MIDDLEWARES DE LOGGING ET PARSING
-// =============================================
-
-// Morgan pour le logging des requetes (seulement en developpement)
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
   console.log('Mode developpement active');
 } else {
   app.use(morgan('combined'));
 }
-
-// Parsing JSON avec limite de taille
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// =============================================
-//  ROUTES DE SANTE ET TEST
-// =============================================
-
-// Route de sante pour le monitoring
 app.get('/api/health', (req, res) => {
   res.json({
     success: true,
@@ -85,7 +66,7 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Route de test complete
+
 app.get('/api/test', (req, res) => {
   res.json({ 
     success: true,
@@ -106,11 +87,6 @@ app.get('/api/test', (req, res) => {
   });
 });
 
-// =============================================
-//  MONTAGE DES ROUTES
-// =============================================
-
-// Routes au singulier pour correspondre a vos services
 app.use('/api/medecin', medecinRoutes);
 app.use('/api/patient', patientRoutes);
 app.use('/api/medicament', medicamentRoutes);
@@ -120,11 +96,6 @@ app.use('/api/ligne-ordonnance', ligneOrdonnanceRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/utilisateurs', utilisateurs);
 
-// =============================================
-//  MIDDLEWARE DE GESTION DES ERREURS
-// =============================================
-
-// Gestion des routes non trouvees
 app.use('*', (req, res) => {
   res.status(404).json({
     success: false,
@@ -150,7 +121,6 @@ app.use('*', (req, res) => {
   });
 });
 
-// Gestion globale des erreurs
 app.use((error, req, res, next) => {
   console.error('Erreur serveur:', error);
   
@@ -164,9 +134,6 @@ app.use((error, req, res, next) => {
   });
 });
 
-// =============================================
-//  DEMARRAGE DU SERVEUR
-// =============================================
 
 app.listen(port, host, () => {
   console.log('\n' + '='.repeat(60));

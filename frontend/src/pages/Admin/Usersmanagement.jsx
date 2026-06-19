@@ -1,4 +1,3 @@
-// pages/Admin/UsersManagement.jsx
 import React, { useState, useEffect } from 'react';
 import { 
   Container, 
@@ -13,6 +12,7 @@ import {
   Badge,
   Spinner
 } from 'react-bootstrap';
+import { BsPencilSquare, BsTrash } from "react-icons/bs";
 import { useAuth } from '../../contexts/AuthContext';
 
 const UsersManagement = () => {
@@ -112,7 +112,7 @@ const UsersManagement = () => {
       telephone: user.telephone || '',
       specialite: user.specialite || '',
       numero_ordre: user.numero_ordre || '',
-      password: '' // Ne pas afficher le mot de passe existant
+      password: '' 
     });
     setShowModal(true);
   };
@@ -179,7 +179,7 @@ const UsersManagement = () => {
         <Col>
           <div className="d-flex justify-content-between align-items-center">
             <div>
-              <h2>👥 Gestion des Utilisateurs</h2>
+              <h2><BsPeople/> Gestion des Utilisateurs</h2>
               <p className="text-muted">Administration des comptes utilisateurs</p>
             </div>
             <Button 
@@ -190,7 +190,7 @@ const UsersManagement = () => {
                 setShowModal(true);
               }}
             >
-              ➕ Nouvel Utilisateur
+              Nouvel Utilisateur
             </Button>
           </div>
         </Col>
@@ -251,15 +251,15 @@ const UsersManagement = () => {
                             variant="outline-primary"
                             onClick={() => handleEdit(user)}
                           >
-                            ✏️
+                            <BsPencilSquare/>
                           </Button>
                           <Button
                             size="sm"
                             variant="outline-danger"
                             onClick={() => handleDelete(user.id_utilisateur)}
-                            disabled={user.id_utilisateur === user.userId} // Empêche de se désactiver soi-même
+                            disabled={user.id_utilisateur === user.userId} 
                           >
-                            🗑️
+                            <BsTrash/>
                           </Button>
                         </div>
                       </td>

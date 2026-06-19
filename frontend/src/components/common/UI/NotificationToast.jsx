@@ -1,4 +1,3 @@
-// NotificationToast.jsx
 import React, { useEffect, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { BsCheckCircle, BsExclamationTriangle, BsXCircle, BsInfoCircle } from 'react-icons/bs';

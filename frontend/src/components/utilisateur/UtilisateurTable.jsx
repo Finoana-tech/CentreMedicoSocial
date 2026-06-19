@@ -6,7 +6,6 @@ import {
   BsPencil,
   BsTrash,
   BsCheckCircle,
-  //BsXCircle,
   BsToggleOn,
   BsToggleOff,
   BsPersonFillGear
@@ -22,9 +21,6 @@ const UtilisateurTable = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
-  /* =========================
-     Filtrage
-  ========================= */
   const filteredUsers = useMemo(() => {
     if (!searchQuery) return utilisateurs;
 
@@ -37,9 +33,6 @@ const UtilisateurTable = ({
     );
   }, [utilisateurs, searchQuery]);
 
-  /* =========================
-     Helpers affichage
-  ========================= */
   const formatActif = (actif) =>
     actif ? (
       <BsCheckCircle size={28} className="text-success" />
@@ -59,9 +52,6 @@ const UtilisateurTable = ({
     return <Badge bg={r.variant}>{r.label}</Badge>;
   };
 
-  /* =========================
-     Chargement
-  ========================= */
   if (loading) {
     return (
       <div className="text-center p-4">
@@ -72,7 +62,6 @@ const UtilisateurTable = ({
 
   return (
     <div>
-      {/* Recherche + Nouveau */}
       <Row className="mb-4">
         <Col>
           <Form.Group className="d-flex align-items-center">
@@ -188,7 +177,6 @@ const UtilisateurTable = ({
         </tbody>
       </Table>
 
-      {/* Résumé */}
       <small className="text-muted">
         {filteredUsers.length} utilisateur(s) sur {utilisateurs.length}
       </small>

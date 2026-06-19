@@ -1,4 +1,3 @@
-// src/services/medecinService.js
 import { apiService } from './api';
 
 class MedecinService {
@@ -149,7 +148,6 @@ class MedecinService {
     
     let id_medecin;
     
-    // CORRECTION : Toujours utiliser id_medecin pour la cohérence avec le backend
     if (medecin.id_medecin !== undefined && medecin.id_medecin !== null) {
       id_medecin = parseInt(medecin.id_medecin);
       console.log('Utilisation id_medecin: ' + id_medecin);
@@ -168,9 +166,8 @@ class MedecinService {
       id_medecin = 0;
     }
     
-    // CORRECTION : Utiliser id_medecin au lieu de id pour correspondre au formulaire
     const formatted = {
-      id_medecin: id_medecin, // CORRECTION CRITIQUE : id_medecin au lieu de id
+      id_medecin: id_medecin, 
       nom: medecin.nom || '',
       prenom: medecin.prenom || '',
       specialite: medecin.specialite || '',
@@ -193,7 +190,6 @@ class MedecinService {
     }
     
     const validMedecins = medecins.filter(medecin => {
-      // CORRECTION : Vérifier id_medecin au lieu de id
       const isValid = medecin && 
                      medecin.id_medecin && 
                      typeof medecin.id_medecin === 'number' && 
@@ -212,16 +208,13 @@ class MedecinService {
     return validMedecins.length === medecins.length;
   }
 
-  // NOUVELLE MÉTHODE : Test de diagnostic
   async testConnection() {
     try {
-      console.log('🧪 Test de connexion MedecinService...');
       
       const medecins = await this.getAll();
-      console.log('✅ MedecinService - Médecins chargés:', medecins.length);
       
       if (medecins.length > 0) {
-        console.log('🔍 Premier médecin:', {
+        console.log(' Premier médecin:', {
           id_medecin: medecins[0].id_medecin,
           nom: medecins[0].nom,
           prenom: medecins[0].prenom,
@@ -231,7 +224,7 @@ class MedecinService {
       
       return medecins;
     } catch (error) {
-      console.error('❌ Test MedecinService échoué:', error);
+      console.error(' Test MedecinService échoué:', error);
       throw error;
     }
   }

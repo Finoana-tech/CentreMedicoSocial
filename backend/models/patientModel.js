@@ -6,7 +6,7 @@ const PatientModel = {
       const [rows] = await db.execute('SELECT * FROM patient ORDER BY nom ASC');
       return rows;
     } catch (error) {
-      console.error('❌ PatientModel.getAll - Erreur:', error);
+      console.error(' PatientModel.getAll - Erreur:', error);
       throw error;
     }
   },
@@ -16,16 +16,14 @@ const PatientModel = {
       const [rows] = await db.execute('SELECT * FROM patient WHERE id_patient = ?', [id]);
       return rows[0];
     } catch (error) {
-      console.error('❌ PatientModel.getById - Erreur:', error);
+      console.error(' PatientModel.getById - Erreur:', error);
       throw error;
     }
   },
 
   create: async (data) => {
     try {
-      console.log('🔍 PatientModel.create - Données reçues:', data);
-      
-      // Nettoyer les données : remplacer undefined par null
+
       const cleanedData = {
         nom: data.nom || null,
         prenom: data.prenom || null,
@@ -37,8 +35,7 @@ const PatientModel = {
         id_tuteur: data.id_tuteur || null,
         lien_familial: data.lien_familial || null
       };
-      
-      console.log('🧹 Données nettoyées:', cleanedData);
+
       
       const [result] = await db.execute(
         `INSERT INTO patient
@@ -57,20 +54,17 @@ const PatientModel = {
         ]
       );
       
-      console.log('✅ Patient créé avec ID:', result.insertId);
       return { id_patient: result.insertId, ...cleanedData };
       
     } catch (error) {
-      console.error('❌ PatientModel.create - Erreur:', error);
+      console.error(' PatientModel.create - Erreur:', error);
       throw error;
     }
   },
 
   update: async (id, data) => {
     try {
-      console.log('🔍 PatientModel.update - ID:', id, 'Données:', data);
       
-      // Nettoyer les données
       const cleanedData = {
         nom: data.nom || null,
         prenom: data.prenom || null,
@@ -101,11 +95,10 @@ const PatientModel = {
         ]
       );
       
-      console.log('✅ Patient mis à jour - Lignes affectées:', result.affectedRows);
       return result.affectedRows > 0 ? { id_patient: id, ...cleanedData } : null;
       
     } catch (error) {
-      console.error('❌ PatientModel.update - Erreur:', error);
+      console.error(' PatientModel.update - Erreur:', error);
       throw error;
     }
   },
@@ -143,7 +136,7 @@ const PatientModel = {
       );
       return rows;
     } catch (error) {
-      console.error('❌ PatientModel.getStats - Erreur:', error);
+      console.error(' PatientModel.getStats - Erreur:', error);
       throw error;
     }
   },
@@ -155,7 +148,7 @@ const PatientModel = {
       );
       return rows;
     } catch (error) {
-      console.error('❌ PatientModel.getTuteursPotentiels - Erreur:', error);
+      console.error(' PatientModel.getTuteursPotentiels - Erreur:', error);
       throw error;
     }
   },
@@ -165,7 +158,7 @@ const PatientModel = {
       const [rows] = await db.execute('SELECT * FROM patient WHERE id_tuteur = ?', [tuteurId]);
       return rows;
     } catch (error) {
-      console.error('❌ PatientModel.getByTuteur - Erreur:', error);
+      console.error(' PatientModel.getByTuteur - Erreur:', error);
       throw error;
     }
   },
@@ -181,12 +174,11 @@ const PatientModel = {
       `);
       return rows;
     } catch (error) {
-      console.error('❌ PatientModel.getPatientsAvecDernierRV - Erreur:', error);
+      console.error(' PatientModel.getPatientsAvecDernierRV - Erreur:', error);
       throw error;
     }
   },
 
-  // Ajout des méthodes manquantes pour le contrôleur
   checkDuplicate: async (nom, prenom, date_naissance, email, excludeId = null) => {
     try {
       let query = `
@@ -209,7 +201,7 @@ const PatientModel = {
       const [rows] = await db.execute(query, params);
       return rows[0].count > 0;
     } catch (error) {
-      console.error('❌ PatientModel.checkDuplicate - Erreur:', error);
+      console.error(' PatientModel.checkDuplicate - Erreur:', error);
       throw error;
     }
   },
@@ -222,15 +214,11 @@ const PatientModel = {
       );
       return rows[0]?.age || 0;
     } catch (error) {
-      console.error('❌ PatientModel.getAge - Erreur:', error);
+      console.error(' PatientModel.getAge - Erreur:', error);
       throw error;
     }
   },
 
-  // === NOUVELLE MÉTHODE POUR LE DASHBOARD ===
-  /**
-   * Compter le nombre total de patients pour le dashboard
-   */
   countPatients: async () => {
     try {
       const [rows] = await db.execute('SELECT COUNT(*) as total FROM patient');

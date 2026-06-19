@@ -1,8 +1,6 @@
-// controllers/MedicamentController.js
 const MedicamentModel = require('../models/medicamentModel');
 
 class MedicamentController {
-  //  Créer un nouveau médicament
   async create(req, res) {
     try {
       console.log(' POST /api/medicament - Début');
@@ -10,7 +8,6 @@ class MedicamentController {
 
       const { nom_commercial } = req.body;
 
-      // Validation des champs obligatoires
       if (!nom_commercial) {
         return res.status(400).json({
           success: false,
@@ -38,12 +35,9 @@ class MedicamentController {
     }
   }
 
-  //  Récupérer tous les médicaments
   async getAll(req, res) {
     try {
-      console.log('🔍 GET /api/medicament - Début');
       const medicaments = await MedicamentModel.getAll();
-      console.log(' Médicaments récupérés:', medicaments.length);
 
       res.json({
         success: true,
@@ -61,11 +55,9 @@ class MedicamentController {
     }
   }
 
-  //  Récupérer un médicament par ID
   async getById(req, res) {
     try {
       const id = req.params.id;
-      console.log(` GET /api/medicament/${id} - Début`);
 
       if (!id || isNaN(id)) {
         return res.status(400).json({
@@ -83,7 +75,6 @@ class MedicamentController {
         });
       }
 
-      console.log(' Médicament récupéré:', medicament);
       res.json({
         success: true,
         message: 'Médicament récupéré avec succès',
@@ -100,7 +91,6 @@ class MedicamentController {
     }
   }
 
-  //  Mettre à jour un médicament
   async update(req, res) {
     try {
       const id = req.params.id;
@@ -131,7 +121,6 @@ class MedicamentController {
         });
       }
 
-      console.log(' Médicament mis à jour:', updatedMedicament);
       res.json({
         success: true,
         message: 'Médicament mis à jour avec succès',
@@ -148,7 +137,6 @@ class MedicamentController {
     }
   }
 
-  //  Supprimer un médicament
   async delete(req, res) {
     try {
       const id = req.params.id;
@@ -186,7 +174,6 @@ class MedicamentController {
     }
   }
 
-  //  Recherche de médicaments
   async search(req, res) {
     try {
       const { q } = req.query;
@@ -218,12 +205,9 @@ class MedicamentController {
     }
   }
 
-  //  NOUVELLE MÉTHODE: Récupérer les médicaments avec stock critique
   async getStockCritique(req, res) {
     try {
-      console.log(' GET /api/medicament/stock/critique - Début');
       const medicaments = await MedicamentModel.getStockCritique();
-      console.log(' Médicaments en stock critique:', medicaments.length);
 
       res.json({
         success: true,
@@ -241,7 +225,6 @@ class MedicamentController {
     }
   }
 
-  //  NOUVELLE MÉTHODE: Récupérer les médicaments par classe thérapeutique
   async getByClasseTherapeutique(req, res) {
     try {
       const { classe } = req.params;
@@ -273,7 +256,6 @@ class MedicamentController {
     }
   }
 
-  //  NOUVELLE MÉTHODE: Mettre à jour le stock d'un médicament
   async updateStock(req, res) {
     try {
       const id = req.params.id;
@@ -321,14 +303,11 @@ class MedicamentController {
     }
   }
 
-  //  NOUVELLE MÉTHODE: Récupérer les statistiques des médicaments
   async getStats(req, res) {
     try {
       console.log(' GET /api/medicament/stats - Début');
       
       const allMedicaments = await MedicamentModel.getAll();
-      
-      // Calcul des statistiques
       const stats = {
         total: allMedicaments.length,
         stock_critique: allMedicaments.filter(m => m.stock_actuel <= m.stock_minimum).length,
@@ -337,15 +316,12 @@ class MedicamentController {
         valeur_stock_total: 0
       };
 
-      // Calcul par classe thérapeutique et valeur du stock
       allMedicaments.forEach(medicament => {
-        // Par classe
         if (medicament.classe_therapeutique) {
           stats.par_classe[medicament.classe_therapeutique] = 
             (stats.par_classe[medicament.classe_therapeutique] || 0) + 1;
         }
-        
-        // Valeur stock total
+       
         stats.valeur_stock_total += medicament.stock_actuel * medicament.prix_unitaire;
       });
 

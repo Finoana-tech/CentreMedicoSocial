@@ -1,4 +1,3 @@
-// backend/utils/notificationManager.js
 const nodemailer = require('nodemailer');
 
 class NotificationManager {
@@ -18,25 +17,21 @@ class NotificationManager {
             socketTimeout: 15000
         });
 
-        // Vérification de la configuration
         this.verifyConfiguration();
-        
-        console.log('✅ NotificationManager initialisé');
     }
 
     async verifyConfiguration() {
         if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-            console.warn('⚠️ Variables SMTP non configurées - Mode simulation activé');
+            console.warn(' Variables SMTP non configurées - Mode simulation activé');
             this.simulationMode = true;
             return;
         }
 
         try {
             await this.transporter.verify();
-            console.log('✅ Serveur SMTP connecté avec succès');
             this.simulationMode = false;
         } catch (error) {
-            console.warn('⚠️ Erreur connexion SMTP - Mode simulation activé:', error.message);
+            console.warn(' Erreur connexion SMTP - Mode simulation activé:', error.message);
             this.simulationMode = true;
         }
     }
@@ -54,7 +49,7 @@ class NotificationManager {
                 minute: '2-digit'
             });
         } catch (error) {
-            console.error('❌ Erreur formatage date:', error);
+            console.error(' Erreur formatage date:', error);
             return 'Date invalide';
         }
     }
@@ -64,18 +59,17 @@ class NotificationManager {
             <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 20px 0;">
             <div style="color: #666; font-size: 12px; line-height: 1.4;">
                 <p><strong>Centre Médico-Social JIRAMA</strong><br>
-                📞 +261 XX XX XXX XX<br>
-                📧 contact@jirama-medical.mg<br>
-                🏥 Adresse: [Adresse du centre]</p>
+                 +261 XX XX XXX XX<br>
+                 contact@jirama-medical.mg<br>
+                Adresse: [Adresse du centre]</p>
                 <p style="color: #999;">Cet email est envoyé automatiquement, merci de ne pas y répondre.</p>
             </div>
         `;
     }
 
     async envoyerEmail(destinataire, sujet, contenuHTML) {
-        // Mode simulation si SMTP non configuré
         if (this.simulationMode) {
-            console.log('📧 [SIMULATION] Email:', {
+            console.log(' [SIMULATION] Email:', {
                 to: destinataire,
                 subject: sujet,
                 simulated: true
@@ -97,14 +91,13 @@ class NotificationManager {
 
         try {
             const result = await this.transporter.sendMail(emailOptions);
-            console.log(`✅ Email envoyé à ${destinataire} - Message ID: ${result.messageId}`);
             return true;
         } catch (error) {
-            console.error(`❌ Erreur envoi email à ${destinataire}:`, error.message);
+            console.error(` Erreur envoi email à ${destinataire}:`, error.message);
             
             // Log détaillé pour le debug
             if (error.response) {
-                console.error('📧 Détails erreur SMTP:', error.response);
+                console.error(' Détails erreur SMTP:', error.response);
             }
             
             return false;
@@ -119,7 +112,7 @@ class NotificationManager {
         const emailPatientHTML = `
             <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
                 <div style="background: linear-gradient(135deg, #2c5aa0, #1e3a6b); padding: 20px; text-align: center; color: white;">
-                    <h1 style="margin: 0; font-size: 24px;">✅ Confirmation de Rendez-vous</h1>
+                    <h1 style="margin: 0; font-size: 24px;"> Confirmation de Rendez-vous</h1>
                 </div>
                 
                 <div style="padding: 20px;">
@@ -136,7 +129,7 @@ class NotificationManager {
                     </div>
 
                     <div style="background: #fff3cd; padding: 15px; border-radius: 5px; border: 1px solid #ffeaa7; margin: 20px 0;">
-                        <h4 style="color: #856404; margin-top: 0;">ℹ️ Informations importantes</h4>
+                        <h4 style="color: #856404; margin-top: 0;">ℹ Informations importantes</h4>
                         <ul style="margin: 10px 0; padding-left: 20px;">
                             <li>Présentez-vous 10 minutes avant l'heure du rendez-vous</li>
                             <li>Apportez votre carte d'identité et carte d'assurance</li>
@@ -152,7 +145,7 @@ class NotificationManager {
         const emailMedecinHTML = `
             <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
                 <div style="background: linear-gradient(135deg, #28a745, #1e7e34); padding: 20px; text-align: center; color: white;">
-                    <h1 style="margin: 0; font-size: 24px;">📅 Nouveau Rendez-vous</h1>
+                    <h1 style="margin: 0; font-size: 24px;"> Nouveau Rendez-vous</h1>
                 </div>
                 
                 <div style="padding: 20px;">
@@ -174,16 +167,16 @@ class NotificationManager {
         `;
 
         const results = await Promise.allSettled([
-            this.envoyerEmail(patient.email, '✅ Confirmation de votre rendez-vous - Centre JIRAMA', emailPatientHTML),
-            this.envoyerEmail(medecin.email, `📅 Nouveau rendez-vous avec ${patient.prenom} ${patient.nom}`, emailMedecinHTML)
+            this.envoyerEmail(patient.email, ' Confirmation de votre rendez-vous - Centre JIRAMA', emailPatientHTML),
+            this.envoyerEmail(medecin.email, ` Nouveau rendez-vous avec ${patient.prenom} ${patient.nom}`, emailMedecinHTML)
         ]);
 
         const succes = results.every(result => result.status === 'fulfilled' && result.value);
         
         if (succes) {
-            console.log('✅ Toutes les notifications de rendez-vous envoyées avec succès');
+            console.log(' Toutes les notifications de rendez-vous envoyées avec succès');
         } else {
-            console.warn('⚠️ Certaines notifications n\'ont pas pu être envoyées');
+            console.warn(' Certaines notifications n\'ont pas pu être envoyées');
         }
 
         return succes;
@@ -195,7 +188,7 @@ class NotificationManager {
         const emailAnnulationHTML = `
             <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
                 <div style="background: linear-gradient(135deg, #dc3545, #c82333); padding: 20px; text-align: center; color: white;">
-                    <h1 style="margin: 0; font-size: 24px;">❌ Rendez-vous Annulé</h1>
+                    <h1 style="margin: 0; font-size: 24px;"> Rendez-vous Annulé</h1>
                 </div>
                 
                 <div style="padding: 20px;">
@@ -203,7 +196,7 @@ class NotificationManager {
                     <p>Nous vous informons que votre rendez-vous a été annulé.</p>
                     
                     <div style="background: #fff3f3; padding: 20px; border-radius: 8px; border-left: 4px solid #dc3545; margin: 20px 0;">
-                        <h3 style="color: #dc3545; margin-top: 0;">📅 Rendez-vous annulé</h3>
+                        <h3 style="color: #dc3545; margin-top: 0;"> Rendez-vous annulé</h3>
                         <p><strong>Date prévue :</strong> ${dateFormatee}</p>
                         <p><strong>Médecin :</strong> Dr ${medecin.prenom} ${medecin.nom}</p>
                         <p><strong>Motif initial :</strong> ${rendezVous.motif || 'Consultation'}</p>
@@ -228,12 +221,12 @@ class NotificationManager {
 
         const succes = await this.envoyerEmail(
             patient.email, 
-            '❌ Annulation de votre rendez-vous - Centre JIRAMA', 
+            ' Annulation de votre rendez-vous - Centre JIRAMA', 
             emailAnnulationHTML
         );
 
         if (succes) {
-            console.log('✅ Notification d\'annulation envoyée avec succès');
+            console.log(' Notification d\'annulation envoyée avec succès');
         }
 
         return succes;
@@ -241,12 +234,12 @@ class NotificationManager {
 
     async envoyerNotificationOccupation(medecin, typeOccupation, duree) {
         const typesTitres = {
-            'urgence': '🚨 Occupation - Urgence Médicale',
-            'administratif': '📋 Occupation - Tâche Administrative', 
-            'pause': '☕ Occupation - Pause'
+            'urgence': ' Occupation - Urgence Médicale',
+            'administratif': ' Occupation - Tâche Administrative', 
+            'pause': ' Occupation - Pause'
         };
 
-        const titre = typesTitres[typeOccupation] || '📋 Occupation Médecin';
+        const titre = typesTitres[typeOccupation] || ' Occupation Médecin';
 
         const emailOccupationHTML = `
             <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
@@ -282,18 +275,16 @@ class NotificationManager {
         );
 
         if (succes) {
-            console.log(`✅ Notification occupation ${typeOccupation} envoyée`);
+            console.log(` Notification occupation ${typeOccupation} envoyée`);
         }
 
         return succes;
     }
 
     async envoyerRappelRendezVous(rendezVous, patient, medecin) {
-        // Méthode pour les rappels (à implémenter si besoin)
         const dateFormatee = this.formatDateForDisplay(rendezVous.date_heure);
         
-        console.log(`📧 Rappel prévu pour ${patient.prenom} ${patient.nom} le ${dateFormatee}`);
-        // Implémentation des rappels automatiques
+        console.log(` Rappel prévu pour ${patient.prenom} ${patient.nom} le ${dateFormatee}`);
         return true;
     }
 }

@@ -1,4 +1,3 @@
-// utils/passwordUtils.js
 const bcrypt = require('bcryptjs');
 const saltRounds = 12;
 

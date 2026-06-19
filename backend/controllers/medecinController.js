@@ -119,7 +119,6 @@ class MedecinController {
 
       const { nom, prenom, disponibilite } = req.body;
 
-      // Validation des champs obligatoires
       if (!nom || !prenom) {
         return res.status(400).json({
           success: false,
@@ -127,7 +126,6 @@ class MedecinController {
         });
       }
 
-      // Validation de la disponibilité si fournie
       const disponibilitesValides = ['disponible', 'en_consultation', 'pause', 'chirurgie', 'hors_service'];
       if (disponibilite && !disponibilitesValides.includes(disponibilite)) {
         return res.status(400).json({
@@ -162,7 +160,6 @@ class MedecinController {
     }
   }
 
-  // Supprimer un médecin
   async delete(req, res) {
     try {
       const id = req.params.id;
@@ -200,7 +197,6 @@ class MedecinController {
     }
   }
 
-  // Recherche de médecins
   async search(req, res) {
     try {
       const { q } = req.query;
@@ -232,7 +228,6 @@ class MedecinController {
     }
   }
 
-  // Mettre à jour la disponibilité d'un médecin
   async updateDisponibilite(req, res) {
     try {
       const id = req.params.id;
@@ -255,7 +250,6 @@ class MedecinController {
         });
       }
 
-      // Validation de la disponibilité
       const disponibilitesValides = ['disponible', 'en_consultation', 'pause', 'chirurgie', 'hors_service'];
       if (!disponibilitesValides.includes(disponibilite)) {
         return res.status(400).json({
@@ -290,7 +284,6 @@ class MedecinController {
     }
   }
 
-  // Obtenir les médecins par disponibilité
   async getByDisponibilite(req, res) {
     try {
       const { disponibilite } = req.params;
@@ -303,7 +296,6 @@ class MedecinController {
         });
       }
 
-      // Validation de la disponibilité
       const disponibilitesValides = ['disponible', 'en_consultation', 'pause', 'chirurgie', 'hors_service'];
       if (!disponibilitesValides.includes(disponibilite)) {
         return res.status(400).json({

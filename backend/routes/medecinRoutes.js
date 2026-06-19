@@ -1,12 +1,8 @@
-// routes/medecinRoutes.js
 const express = require('express');
 const router = express.Router();
 const MedecinController = require('../controllers/medecinController');
 
-// Routes spéciales à mettre avant les routes avec paramètre :id
 router.get('/search', MedecinController.search);
-
-// Nouvelles routes pour la disponibilité
 router.get('/disponibilite/:disponibilite', MedecinController.getByDisponibilite);
 router.patch('/:id/disponibilite', MedecinController.updateDisponibilite);
 

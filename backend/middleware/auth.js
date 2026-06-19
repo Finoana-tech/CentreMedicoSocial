@@ -1,11 +1,10 @@
-// middleware/auth.js
 const jwt = require("jsonwebtoken");
 const UtilisateurModel = require("../models/utilisateurModel");
 
 const SECRET = process.env.JWT_SECRET || "votre_secret_jwt_tres_securise";
 
 const authMiddleware = {
-  // Vérifie le token JWT et ajoute req.user
+  
   async verifyToken(req, res, next) {
     try {
       const authHeader = req.headers.authorization;

@@ -1,4 +1,3 @@
-// src/App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
@@ -17,12 +16,8 @@ import './App.css';
 
 import RendezVousForm from './components/rendez_vous/RendezVousForm';
 import RendezVousStats from './components/rendez_vous/RendezVousStats';
-
-//  Nouvelles pages pour mot de passe oublié et reset
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
-
-//  Nouvelle page utilisateurs
 import Utilisateurs from './pages/Utilisateurs';
 
 function App() {
@@ -143,7 +138,7 @@ function App() {
               } 
             />
 
-            {/* ✅ Nouvelle route utilisateurs */}
+            {/*  Nouvelle route utilisateurs */}
             <Route 
               path="utilisateurs"
               element={

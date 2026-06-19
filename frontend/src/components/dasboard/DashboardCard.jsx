@@ -1,4 +1,3 @@
-// src/components/dashboard/DashboardCard.jsx
 import React from 'react';
 import { Card, Row, Col, Spinner } from 'react-bootstrap';
 import { BsArrowUp, BsPerson, BsCalendarEvent, BsFileText, BsPeople } from 'react-icons/bs';
@@ -53,6 +52,5 @@ const DashboardCard = ({
   );
 };
 
-// Exportez également les icônes pour les utiliser dans le composant parent
 export { DashboardCard, BsPerson, BsCalendarEvent, BsFileText, BsPeople };
 export default DashboardCard;

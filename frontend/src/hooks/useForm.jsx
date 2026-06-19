@@ -6,7 +6,7 @@ export const useForm = (initialState = {}, validateFn = null) => {
   const [touched, setTouched] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Mise à jour des champs du formulaire
+
   const handleChange = useCallback((e) => {
     const { name, value, type, checked } = e.target;
     
@@ -15,13 +15,11 @@ export const useForm = (initialState = {}, validateFn = null) => {
       [name]: type === 'checkbox' ? checked : value
     }));
 
-    // Marquer le champ comme touché
     setTouched(prev => ({
       ...prev,
       [name]: true
     }));
 
-    // Effacer l'erreur du champ quand l'utilisateur tape
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -30,7 +28,7 @@ export const useForm = (initialState = {}, validateFn = null) => {
     }
   }, [errors]);
 
-  // Gestion des champs select, radio, etc.
+  
   const setFieldValue = useCallback((name, value) => {
     setFormData(prev => ({
       ...prev,
@@ -90,12 +88,10 @@ export const useForm = (initialState = {}, validateFn = null) => {
     }
   }, [formData, validateForm]);
 
-  // Vérifier si un champ est en erreur et a été touché
   const getFieldError = useCallback((fieldName) => {
     return touched[fieldName] ? errors[fieldName] : '';
   }, [errors, touched]);
 
-  // Vérifier si le formulaire est valide
   const isValid = Object.keys(errors).length === 0;
 
   return {
@@ -110,12 +106,12 @@ export const useForm = (initialState = {}, validateFn = null) => {
     resetForm,
     validateForm,
     getFieldError,
-    setFormData, // Pour les mises à jour manuelles
-    setErrors,   // Pour définir des erreurs manuellement
+    setFormData, 
+    setErrors,  
   };
 };
 
-// Validateurs prédéfinis
+
 export const validators = {
   required: (value) => !value || value.toString().trim() === '' ? 'Ce champ est requis' : '',
   email: (value) => {
@@ -147,7 +143,6 @@ export const validators = {
   }
 };
 
-// Helper pour créer des schémas de validation
 export const createValidator = (rules) => (data) => {
   const errors = {};
   

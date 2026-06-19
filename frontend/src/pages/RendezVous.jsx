@@ -14,7 +14,6 @@ import {
 import { useNavigate } from 'react-router-dom';
 import RendezVousTable from '../components/rendez_vous/RendezVousTable';
 import RendezVousDetails from '../components/rendez_vous/RendezVousDetails';
-//import RendezVousLocalNavCompact from '../components/rendez_vous/RendezVousLocalNav';
 import { rendezvousService } from '../services/rendezVousService';
 import { useCrud } from '../hooks/useCrud';
 import NotificationToast from '../components/common/UI/NotificationToast';
@@ -241,13 +240,6 @@ const RendezVous = () => {
 
   return (
     <Container fluid className="p-4 bg-light min-vh-100">
-      {/* Spinner 
-      <RendezVousLocalNavCompact
-        stats={stats}
-        onRefresh={handleRefresh}
-        refreshing={refreshing || loading}
-        userRole={userRole}
-      />*/}
 
       {/* En-tête avec titre et boutons */}
             <div className="d-flex justify-content-between align-items-center mb-4">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Alert, Row, Col, Card } from 'react-bootstrap';
-import { BsCapsule, BsArrowClockwise, BsExclamationTriangle, BsGraphUp, BsPrescription } from 'react-icons/bs';
+import { BsCapsule,  BsExclamationTriangle, BsGraphUp, BsPrescription } from 'react-icons/bs';
 import MedicamentTable from '../components/medicament/Medicamenttable';
 import MedicamentForm from '../components/medicament/MedicamentForm';
 import { medicamentService } from '../services/medicamentService';
@@ -145,7 +145,7 @@ const Medicaments = () => {
         </div>
       </div> 
 
-      {/* Cartes de statistiques - Design épuré avec 3 couleurs */}
+      
       {!loadingStats && stats && (
         <Row className="mb-4">
           <Col md={3}>
@@ -207,7 +207,7 @@ const Medicaments = () => {
         </Row>
       )}
 
-      {/* Alerte stock critique - Design sobre */}
+     
       {stockCritique.length > 0 && (
         <Alert variant="warning" className="d-flex align-items-center border-warning">
           <div className="bg-warning bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" style={{width: '40px', height: '40px'}}>
